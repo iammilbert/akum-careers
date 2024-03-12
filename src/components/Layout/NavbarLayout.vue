@@ -1,20 +1,16 @@
 <template>
-  <div id="app">
+  <div>
+    <Nav_bar />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
+import Nav_bar from '@/components/Nav_bar.vue';
 
 export default {
-  name: 'App',
   components: {
-
+    Nav_bar
   }
 }
 </script>
-
-<style>
-/* Add any custom styles here */
-</style>
