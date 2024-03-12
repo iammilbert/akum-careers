@@ -51,7 +51,7 @@ export default {
   methods: {
     handleSave() {
     this.errors = '';
-        axios.post('http://127.0.0.1:8000/api/auths/register', {email: this.email, password: this.password})
+        axios.post('https://api.cv.scola.raadaa.com/cv/register', {email: this.email, password: this.password})
         .then(response => {
           console.log(response); // Log the entire response object for debugging
           
