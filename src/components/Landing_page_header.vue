@@ -15,15 +15,14 @@
             <p class="text-center">Create Account to continue applying</p>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" v-model="data.email" name="email" placeholder="Enter your email" required>
-              <span v-if="errors.email">{{ errors.email[0] }}</span>
+              <input type="email" class="form-control" id="email" v-model="email" name="email" placeholder="Enter your email" required>
+              <span v-if="errors.email" class="text-danger">{{ errors.email[0] }}</span>
             </div>
           
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" v-model="data.password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
-              <span v-if="errors.password">{{ errors.password[0] }}</span>
-              
+              <input type="password" class="form-control" id="password" v-model="password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+            <span class="text-danger" v-if="errors.password">{{ errors.password[0] }}</span>
             </div>
             <div class="mt-3">
               <button @click="handleSave()" type="button" class="btn btn-outline-primary mt-3 form-control" style="background-color:#00C000; font-size:20px; color:white">Create Account
@@ -44,43 +43,61 @@ export default {
   name: 'Landing_page_header',
   data() {
     return {
-    data:{
       email: '',
       password: '',
-    },
       errors: {},
-      successMessage: '',
     };
   },
   methods: {
     handleSave() {
-        axios.post('http://127.0.0.1:8000/api/auths/register', this.data)
-          .then(response => {
+    this.errors = '';
+        axios.post('http://127.0.0.1:8000/api/auths/register', {email: this.email, password: this.password})
+        .then(response => {
+          console.log(response); // Log the entire response object for debugging
+          
+          // Check if the response contains a message field or not
+          if (response.data && response.data.message) {
+            // If there is a message field, display it in SweetAlert as a success message
             Swal.fire({
-                icon: 'success',
-                title: 'Registration successful',
-                showConfirmButton: false,
-                timer: 4000
-            })
-            this.data.email = ""
-            this.data.password = ""
-            return response
-          })
-          .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'An Error Occured!',
-                showConfirmButton: false,
-                timer: 4000
-            })
-            return error
-          });
+              icon: 'success',
+              title: 'Account Created',
+              text: response.data.message, // Use response.data.message as the text of the alert
+              showConfirmButton: false,
+              timer: 4000,
+              customClass: {
+                content: 'small-text' // Define a CSS class to reduce text size
+                }
+            });
+          } else {
+            // If there is no message field, handle it as per your requirements
+            console.log('Response does not contain a message field');
+          }
+
+          // Clear email and password fields
+          this.email = "";
+          this.password = "";
+
+          return response; // Return the response for further handling if needed
+        })
+        .catch(errors => {
+          // Handle validation errors
+        if (errors.response.status === 422) {
+        this.errors = errors.response.data.errors;
+            this.successMessage = ''; // Clear success message if there was an error
+          } else {
+            // Handle other errors (e.g., server error)
+            console.error('Registration failed:', errors);
+          }
+        });
     }
   }
 };
 </script>
 
 <style scoped>
+.small-text {
+  font-size: 12px; /* Adjust the font size as needed */
+}
 .header-container {
   background-image: linear-gradient(to right, rgba(0, 40, 0, 10), rgba(0, 0, 0, 0)), url('@/assets/images/low-rise-building.jpg');
   background-size: cover;
