@@ -8,25 +8,23 @@
       </div>
       <div class="login-form rounded" id="createAccount">
         <div class="card p-5">
-          <div class="btn-succcess btn" v-if="successMessage">{{ successMessage }}</div>
-
           <form @submit.prevent="register">
             <h2 class="text-center">Create an Account</h2>
             <p class="text-center">Create Account to continue applying</p>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" v-model="email" name="email" placeholder="Enter your email" required>
-              <span v-if="errors.email" class="text-danger">{{ errors.email[0] }}</span>
-            </div>
-          
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" v-model="password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
-            <span class="text-danger" v-if="errors.password">{{ errors.password[0] }}</span>
-            </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control form-control-lg" id="email" v-model="email" name="email" placeholder="Enter your email" required>
+      </div>
+    
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control form-control-lg" id="password" v-model="password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" required>
+      </div>
             <div class="mt-3">
-              <button @click="handleSave()" type="button" class="btn btn-outline-primary mt-3 form-control" style="background-color:#00C000; font-size:20px; color:white">Create Account
-              </button>
+        <button id="checkoutButton" :disabled="loading" type="submit" class="btn btn-outline-primary mt-3 form-control" style="background-color:#00C000; font-size:20px; color:white">
+          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ loading ? 'Processing...' : 'Create Account' }}
+        </button>
             </div>
           </form>
         </div>
@@ -35,60 +33,72 @@
   </header>
 </template>
 
+
 <script>
 import Swal from 'sweetalert2';
 import axios from 'axios';
-export default {
 
-  name: 'Landing_page_header',
+export default {
+  name: 'LandingPageHeader',
   data() {
     return {
       email: '',
       password: '',
       errors: {},
+      loading: false,
     };
   },
   methods: {
-    handleSave() {
-    this.errors = '';
-        axios.post('https://api.cv.scola.raadaa.com/cv/register', {email: this.email, password: this.password})
-        .then(response => {
-          console.log(response); // Log the entire response object for debugging
-          
-          // Check if the response contains a message field or not
-          if (response.data && response.data.message) {
-            // If there is a message field, display it in SweetAlert as a success message
-            Swal.fire({
-              icon: 'success',
-              title: 'Account Created',
-              text: response.data.message, // Use response.data.message as the text of the alert
-              showConfirmButton: false,
-              timer: 4000,
-              customClass: {
-                content: 'small-text' // Define a CSS class to reduce text size
-                }
-            });
-          } else {
-            // If there is no message field, handle it as per your requirements
-            console.log('Response does not contain a message field');
-          }
+    async register() {
+      this.loading = true;
+      this.buttonText = 'Processing...';
+      this.errors = '';
+
+    try {
+        const response = await axios.post('https://api.portal.akum.edu.ng/api/staff/application/create', {
+          email: this.email,
+          password: this.password
+        });
+
+        console.log(response);
+
+        if (response.data && response.data.code === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Registration',
+            text: 'Account Created Successfully',
+            showConfirmButton: false,
+            timer: 4000,
+          });
 
           // Clear email and password fields
-          this.email = "";
-          this.password = "";
+          this.email = '';
+          this.password = '';
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed',
+            text: response.data.message,
+            showConfirmButton: false,
+            timer: 4000,
+          });
+        } 
 
-          return response; // Return the response for further handling if needed
-        })
-        .catch(errors => {
-          // Handle validation errors
-        if (errors.response.status === 422) {
-        this.errors = errors.response.data.errors;
-            this.successMessage = ''; // Clear success message if there was an error
-          } else {
-            // Handle other errors (e.g., server error)
-            console.error('Registration failed:', errors);
-          }
+        return response; // Return the response for further handling if needed
+      } catch (error) {
+        // Handle network errors
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to connect to the server. Please try again later.',
+          showConfirmButton: false,
+          timer: 4000,
         });
+      } finally {
+        this.loading = false;
+        this.buttonText = 'Create Account';
+      }
     }
   }
 };

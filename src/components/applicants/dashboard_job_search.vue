@@ -17,23 +17,23 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-5 mb-4 mb-lg-0">
-        <h4>All Jobs</h4>
-        <hr>
-        <div class="read-more">
-          <button class="btn btn-lg" type="button" data-bs-toggle="collapse" :data-bs-target="'#categoryDropdown'" aria-expanded="true" aria-controls="categoryDropdown">
-            Categories <i class="bi bi-caret-down-fill" style="font-size:20px;"></i>
-          </button>
-          <div class="collapse show" id="categoryDropdown">
-            <div class="list-group mt-2">
-              <label v-for="(item, index) in items" :key="index" class="list-group-item custom-list-item mt-3">
-                <input class="form-check-input mr-2" type="checkbox" v-model="checkedItems" :value="item.id">
-                {{ item.name }}
-              </label>
-            </div>
-          </div>
+ <div class="col-lg-5 mb-4 mb-lg-0">
+    <h4>All Jobs</h4>
+    <hr>
+    <div class="read-more">
+      <button class="btn btn-lg" type="button" data-toggle="collapse" data-target="#categoryDropdown" aria-expanded="true" aria-controls="categoryDropdown" @click="toggleCollapse">
+        Categories <i class="bi bi-caret-down-fill" style="font-size:20px;"></i>
+      </button>
+      <div class="collapse" :class="{ 'show': isCollapsed }" id="categoryDropdown">
+        <div class="list-group mt-2">
+          <label v-for="(item, index) in items" :key="index" class="list-group-item custom-list-item mt-3">
+            <input class="form-check-input me-2" type="checkbox" v-model="checkedItems" :value="item.id">
+            {{ item.name }}
+          </label>
         </div>
       </div>
+    </div>
+  </div>
 
       <div class="col-lg-7">
         <h4>Open Roles</h4>
@@ -109,6 +109,7 @@ export default {
   data() {
     return {
     showModal: false,
+      isCollapsed: true, // Flag to track collapse state
       checkedItems: [],
       items: [
         { id: 1, name: 'All' },
@@ -150,6 +151,9 @@ export default {
     }
   },
   methods: {
+      toggleCollapse() {
+      this.isCollapsed = !this.isCollapsed;
+    },
       openModal() {
       this.showModal = true;
     },
