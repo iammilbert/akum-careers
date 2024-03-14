@@ -18,7 +18,7 @@
     
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control form-control-lg" id="password" v-model="password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" required>
+        <input type="password" class="form-control form-control-lg" id="password" v-model="password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" required style="opacity: 0.6;">
       </div>
             <div class="mt-3">
         <button id="checkoutButton" :disabled="loading" type="submit" class="btn btn-outline-primary mt-3 form-control" style="background-color:#00C000; font-size:20px; color:white">
