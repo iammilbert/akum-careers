@@ -35,6 +35,7 @@ const routes = [
 
   {
     path: '/application-form',
+    name:'applicationForm',
     component: ApplicationFormLayout,
   }
 ];

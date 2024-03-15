@@ -33,7 +33,7 @@
               <div class="modal-footer bg-white">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button class="btn mr-2 btn-sm" type="button" style="font-size:14px; background-color:#D3D1B3" @click="openModal(role)">View details</button>
-                  <router-link to="/application-form" style="font-size:14px;" class="btn btn-outline-success" type="button" @click="openModal()">Apply Now</router-link>
+                  <button style="font-size:14px;" class="btn btn-outline-success" type="button" @click="applyNow(role)">Apply Now</button>
                 </div>
               </div>
             </div>
@@ -150,7 +150,21 @@ export default {
       });
     },
 
-    changePage(pageNumber) {
+    applyNow(role) {
+    // Redirect to the application form route with job title and ID as query parameters
+    this.$router.push({
+      name: 'applicationForm',
+      query: {
+        jobId: role._id,
+        jobTitle: role.responsibilities,
+        jobFaculty: role.faculty,
+        jobDepartment: role.department, 
+
+      }
+    });
+  },
+
+  changePage(pageNumber) {
       this.currentPage = pageNumber;
     },
     prevPage() {

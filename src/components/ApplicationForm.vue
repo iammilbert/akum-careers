@@ -3,12 +3,15 @@
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-8 mt-2">
-        <h2 class="card-title text-center mb-4">{{ $route.query.jobTitle }}</h2>
+        <h6 class="card-title text-center">Faculty : {{ $route.query.jobFaculty }}</h6>
+        <h6 class="card-title text-center">Department: {{ $route.query.jobDepartment }}</h6>
+        <h4 class="card-title text-center mb-4">{{ $route.query.jobTitle }}</h4>
         <div class="card border-0 shadow" style="background-color:#EAFAF1">
           <div class="card-body">
             <div v-if="errors" style="color: red;">{{ errors }}</div>
-            <form @submit.prevent="register">
+            <form @submit.prevent="submitApplication">
               <div class="form-group mb-3">
+               <input type="hidden" id="jobId" class="form-control" v-model="jobId" readonly>
                 <label>Select Employment Type</label>
                 <select v-model="employment_type" class="form-control">
                   <option value="" disabled selected hidden>Select an option</option>
@@ -41,9 +44,19 @@
                 <label for="phone_number">Phone number</label>
                 <input type="tel" class="form-control" id="phone_number" v-model="phone_number" placeholder="08162198753" autocomplete="phone number" required>
               </div>
+              
+              <div class="form-group mb-3">
+                <label for="state_of_origin">State of Origin</label>
+                <select class="form-control" id="state_of_origin" v-model="stateOfOrigin" required>
+                  <option value="" disabled>Select State</option>
+                  <option v-for="state in states" :key="state" :value="state">{{ state }}</option>
+                </select>
+              </div>
+
               <div class="form-group mb-4 mt-5">
                 <h5 class="font-weight-bold">Highest Education attained</h5>
               </div>
+
               <div class="form-group mb-3">
                 <label for="school">Name of School</label>
                 <input type="text" class="form-control" id="school" v-model="school" placeholder="Enter School name" required>
@@ -60,17 +73,28 @@
                 <label for="institution_worked_before">Previous Institution Worked</label>
                 <input type="text" class="form-control" id="institution_worked_before" v-model="institution_worked_before" placeholder="Enter Institution" required>
               </div>
+
               <div class="form-group mb-3">
-                <label for="state_of_origin">State of Origin</label>
-                <select class="form-control" id="state_of_origin" v-model="stateOfOrigin" required>
-                  <option value="" disabled>Select State</option>
-                  <option v-for="state in states" :key="state" :value="state">{{ state }}</option>
-                </select>
+                <label for="staff_id_number"  class="">Staff ID</label>
+                <input type="text" class="form-control" id="staff_id_number" v-model="staff_id_number" placeholder="Enter Staff Id" required>
               </div>
+
+              <hr class="mt-3 mb-3">
+  <p><i class="fas fa-exclamation-circle text-danger"></i> Format :(pdf, docx, jpeg, png, jpg)</p>
+              <div class="form-group mb-3" v-for="fileInput in fileInputs" :key="fileInput.id">
+                <label :for="fileInput.id" class="d-block">{{ fileInput.label }}</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="form-control" :id="fileInput.id" @change="handleFileUpload($event, fileInput.name)" :accept="fileInput.accept" required>
+                    <label class="custom-file-label" :for="fileInput.id">{{ fileInput.fileName || 'Choose file' }}</label>
+                  </div>
+                </div>
+              </div>
+
               <div class="form-group mb-5 mt-5">
-                <button type="submit" class="btn rounded btn-lg form-control text-white" style="background-color:#00C000">
-                  <span v-if="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"> Processing</span>
-                  <span v-else>Register</span>
+                <button type="submit" :disabled="loading" class="btn rounded btn-lg form-control text-white" style="background-color:#00C000">
+                  <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  {{ loading ? 'Submitting...' : 'Submit Application' }}
                 </button>
               </div>
             </form>
@@ -90,69 +114,97 @@ export default {
   name: 'RegistrationForm',
   data() {
     return {
-      isSubmitting: false,
+      jobId: this.$route.query.jobId,
+      loading: false,
+      errors: '',
+      email: '',
       employment_type: '',
       firstname: '',
       middlename: '',
       lastname: '',
-      email: '',
       phone_number: '',
       school: '',
       degree: '',
       discipline: '',
       institution_worked_before: '',
       stateOfOrigin: '',
+      staff_id_number: '',
+      cv: null,
+      letter_of_employment: null,
+      cover_letter: null,
+      passport_photo: null,
       states: [
         'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 'Cross River', 'Delta',
         'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT - Abuja', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
         'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers',
         'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
+      ],
+      fileInputs: [
+        { id: 'cv', label: 'Upload Resume/CV', name: 'cv', accept: '.pdf,.docx,.jpeg,.jpg,.png' },
+        { id: 'cover_letter', label: 'Cover Letter', name: 'cover_letter', accept: '.pdf,.docx,.jpeg,.jpg,.png' },
+        { id: 'letter_of_employment', label: 'Letter of Employment', name: 'letter_of_employment', accept: '.pdf,.docx,.jpeg,.jpg,.png' },
+        { id: 'passport_photo', label: 'Passport Photograph', name: 'passport_photo', accept: '.pdf,.docx,.jpeg,.jpg,.png' }
       ]
     };
   },
   methods: {
-    register() {
-      this.isSubmitting = true;
-      const formData = {
-        employment_type: this.employment_type,
-        firstname: this.firstname,
-        middlename: this.middlename,
-        lastname: this.lastname,
-        email: this.email,
-        phone_number: this.phone_number,
-        school: this.school,
-        degree: this.degree,
-        discipline: this.discipline,
-        institution_worked_before: this.institution_worked_before,
-        state_of_origin: this.stateOfOrigin
-      };
+    handleFileUpload(event, fileType) {
+      const file = event.target.files[0];
+      const fieldName = event.target.id;
+      this[fieldName] = file;
+      // Update the fileName property for the corresponding file input
+      const fileInput = this.fileInputs.find(input => input.name === fileType);
+      if (fileInput) {
+        fileInput.fileName = file ? file.name : null;
+      }
+    },
+
+    submitApplication() {
+      this.loading = true;
+      const formData = new FormData();
+      formData.append('jobId', this.jobId);
+      formData.append('employment_type', this.employment_type);
+      formData.append('firstname', this.firstname);
+      formData.append('middlename', this.middlename);
+      formData.append('lastname', this.lastname);
+      formData.append('email', this.email);
+      formData.append('phone_number', this.phone_number);
+      formData.append('school', this.school);
+      formData.append('degree', this.degree);
+      formData.append('discipline', this.discipline);
+      formData.append('institution_worked_before', this.institution_worked_before);
+      formData.append('state_of_origin', this.stateOfOrigin);
+      formData.append('staff_id_number', this.staff_id_number);
+      formData.append('cv', this.cv);
+      formData.append('letter_of_employment', this.letter_of_employment);
+      formData.append('cover_letter', this.cover_letter);
+      formData.append('passport_photo', this.passport_photo);
 
       axios.post('https://api.portal.akum.edu.ng/api/akum/career', formData)
         .then(response => {
-          console.log('Registration successful:', response.data);
+          console.log('Application submitted successfully:', response.data);
           Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'Registration successful!'
+            text: 'Application submitted successfully!'
           });
           // Optionally, you can redirect to a success page or perform other actions
         })
         .catch(error => {
-          console.error('Failed to register:', error);
+          console.error('Failed to submit application:', error);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Failed to register. Please try again later.'
+            text: 'Failed to submit application. Please try again later.'
           });
         })
         .finally(() => {
-          this.isSubmitting = false;
+          this.loading = false;
         });
     }
   }
 };
 </script>
-
 
 <style>
 #login {

@@ -4,10 +4,10 @@
 
       <div class="col-md-3"></div>
 
-      <div class="col-md-6 mt-4">
+      <div class="col-md-6">
         <div class="card border-0 shadow">
           <div class="card-body">
-            <h2 class="card-title text-center">Login</h2>
+            <h2 class="card-title text-center font-weight-bold">Login</h2>
             <h6 class="card-title text-center mb-4">Welcome back, <br>Login to check your application status</h6>
             
             <form @submit.prevent="login">
@@ -25,6 +25,20 @@
               <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
               {{ loading ? 'Logging in...' : 'Login' }}
             </button>
+
+              <div class="form-group mb-3 mt-3 text-center">
+                  <router-link to="#" class="font-weight-bold">Forgot Password?</router-link>
+              </div>
+
+              <div class="form-group mt-2 ml-4">
+                <input class="form-check-input me-2" type="checkbox" v-model="rememberMe"> Remember me
+              </div>
+
+              <div class="form-group mb-3 ml-1">
+                New to AKUM Career?
+                <router-link to="/" class="font-weight-bold">Register now.</router-link>
+              </div>
+
             </form>
           </div>
         </div>
