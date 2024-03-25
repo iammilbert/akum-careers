@@ -27,11 +27,11 @@
             </button>
 
               <div class="form-group mb-3 mt-3 text-center">
-                  <router-link to="#" class="font-weight-bold">Forgot Password?</router-link>
+                  <router-link to="/forgotPassword" class="font-weight-bold">Forgot Password?</router-link>
               </div>
 
               <div class="form-group mt-2 ml-4">
-                <input class="form-check-input me-2" type="checkbox" v-model="rememberMe"> Remember me
+                <input class="form-check-input me-2" id="rememberMe" type="checkbox" v-model="rememberMe"> Remember me
               </div>
 
               <div class="form-group mb-3 ml-1">
@@ -50,6 +50,7 @@
   </div>
 </template>
 
+
 <script>
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -60,6 +61,7 @@ export default {
       loading: false,
       email: '',
       password: '',
+      rememberMe: false,
       errors: {} // Object to store error messages
     };
   },
@@ -74,8 +76,12 @@ export default {
           password: this.password
         });
 
-        const token = response.data.token;
+            
+        const { token, email, user_id } = response.data;
+        // Store user data in local storage
         localStorage.setItem('token', token);
+        localStorage.setItem('user_id', user_id);
+        localStorage.setItem('email', email);
 
         Swal.fire({
           icon: 'success',
@@ -86,6 +92,14 @@ export default {
         }).then(() => {
           window.location.href = '/applicantDashboard';
         });
+
+        // If Remember Me is checked, store username and password in local storage
+        if (this.rememberMe) {
+          localStorage.setItem('rememberedUser', JSON.stringify({ email: this.email, password: this.password }));
+        } else {
+          // If Remember Me is not checked, remove stored credentials from local storage
+          localStorage.removeItem('rememberedUser');
+        }
       } catch (error) {
         this.loading = false;
         if (error.response && error.response.data && error.response.data.errors) {
@@ -104,18 +118,33 @@ export default {
           });
         }
       }
+    },
+    checkRememberedUser() {
+      // Check if there are remembered credentials in local storage
+      const rememberedUser = localStorage.getItem('rememberedUser');
+      if (rememberedUser) {
+        const { email, password } = JSON.parse(rememberedUser);
+        // Set the email and password from local storage
+        this.email = email;
+        this.password = password;
+        this.rememberMe = true; // Check the Remember Me checkbox
+      }
     }
+  },
+  created() {
+    // When the component is created, check if there are remembered credentials
+    this.checkRememberedUser();
   }
 };
 </script>
+
+
+
 
 <style>
 .error {
   color: red;
 }
-</style>
-
-<style>
 #login {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;

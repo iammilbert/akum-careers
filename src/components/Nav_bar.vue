@@ -30,7 +30,7 @@
           </li>
           <li class="nav-item">
             <button class="btn btn-sm" style="background-color:#00C000;">
-              <router-link to="/loginForm" class="nav-link text-white">
+              <router-link to="/login" class="nav-link text-white">
                 <i class="fas fa-sign-in"></i> Login
               </router-link>
             </button>
