@@ -1,165 +1,275 @@
 <template>
-  <div id="login" class="container align-items-center justify-content-center vh-100">
+  <div id="login" class="container align-items-center justify-content-center" style="font-family:inter">
     <div class="row">
-
       <div class="col-md-2"></div>
-
-      <div class="col-md-8 mt-2">
-       <h2 class="card-title text-center mb-4">Senior Administrative Officer</h2>
+      <div class="col-md-8">
+    <h3 class="text-center mb-5" style="background-color:#EAFAF1"><span style="font-size:40px; font-weight-bold" class="text-success">{{ $route.query.faculty }}</span><br> 
+   {{ $route.query.department }}</h3>
+    
+        <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ $route.query.jobTitle }}</h3>
         <div class="card border-0 shadow" style="background-color:#EAFAF1">
           <div class="card-body">
             <div v-if="errors" style="color: red;">{{ errors }}</div>
-            <form @submit.prevent="login">
-             <div class="form-group mb-3 mt-2">
-                <h5 for="first_name" class="font-weight-bold">Personal Details</h5>
-              </div>
-<div class="form-group mb-3">
-    <!-- Select dropdown -->
-    <label>Select Employment Type</label>
-    <select v-model="selectedOption" class="form-control">
-        <option value="" disabled selected hidden>Select an option</option>
-        <option value="fulltime">Full-time</option>
-        <option value="parttime">Part-time</option>
-        <option value="contract">Contract</option>
-        <option value="temporary">Temporary</option>
-        <option value="internship">Internship</option>
-        <option value="freelance">Freelance</option>
-        <!-- Add more options as needed -->
-    </select>
-</div>
-
+            <form @submit.prevent="submitApplication">
               <div class="form-group mb-3">
-                <label for="first_name" class="">First Name</label>
-                <input type="text" class="form-control" id="first_name" v-model="first_name" placeholder="Enter your first name" autocomplete="name" required>
+               <input type="hidden" id="role" class="form-control" v-model="role" readonly>
+                <input type="hidden" class="form-control form-control-lg" id="user" v-model="user" readonly>
+                <label>Select Employment Type</label>
+                <select v-model="employment_type" class="form-control">
+                  <option value="" disabled selected hidden>Select an option</option>
+                  <option value="fulltime">Full-time</option>
+                  <option value="parttime">Part-time</option>
+                  <option value="contract">Contract</option>
+                  <option value="internship">Internship</option>
+                </select>
               </div>
               <div class="form-group mb-3">
-                <label for="middle_name" class="">Middle Name</label>
-                <input type="text" class="form-control" id="middle_name" v-model="middle_name" placeholder="Enter your middle_name" autocomplete="middle name" required>
+                <label for="firstname">First Name</label>
+                <input type="text" class="form-control" id="firstname" v-model="firstname" placeholder="Enter your first name" autocomplete="name" required>
               </div>
               <div class="form-group mb-3">
-                <label for="last_name" class="">Last Name</label>
-                <input type="text" class="form-control" id="last_name" v-model="last_name" placeholder="Enter your last name" autocomplete="last name" required>
+                <label for="middlename">Middle Name</label>
+                <input type="text" class="form-control" id="middlename" v-model="middlename" placeholder="Enter your middle name" autocomplete="middle name">
               </div>
-               <div class="form-group mb-3">
-                <label for="email" class="">Email Address</label>
+              <div class="form-group mb-3">
+                <label for="lastname">Last Name</label>
+                <input type="text" class="form-control" id="lastname" v-model="lastname" placeholder="Enter your last name" autocomplete="last name" required>
+              </div>
+              <div class="form-group mb-3">
+                <label for="email">Email Address</label>
                 <input type="email" class="form-control" id="email" v-model="email" placeholder="e.g. admin@example.com" autocomplete="email" required>
               </div>
               <div class="form-group mb-3">
-                <label for="phone_number" class="">Phone number</label>
+                <label for="phone_number">Phone number</label>
                 <input type="tel" class="form-control" id="phone_number" v-model="phone_number" placeholder="08162198753" autocomplete="phone number" required>
               </div>
+              
+              <div class="form-group mb-3">
+                <label for="state_of_origin">State of Origin</label>
+                <select class="form-control" id="state_of_origin" v-model="stateOfOrigin" required>
+                  <option value="" disabled>Select State</option>
+                  <option v-for="state in states" :key="state" :value="state">{{ state }}</option>
+                </select>
+              </div>
+
               <div class="form-group mb-4 mt-5">
-                <h5 for="email" class="font-weight-bold">Highest Education attained</h5>
+                <h5 class="font-weight-bold">Highest Education attained</h5>
               </div>
 
               <div class="form-group mb-3">
-                <label for="school"  class="">Name of School</label>
+                <label for="school">Name of School</label>
                 <input type="text" class="form-control" id="school" v-model="school" placeholder="Enter School name" required>
               </div>
-
-             <div class="form-group mb-3">
-                <label for="degree"  class="">Degree</label>
-                <input type="text" class="form-control" id="degree" v-model="degree" placeholder="E.g. Batchelor Degree" required>
+              <div class="form-group mb-3">
+                <label for="degree">Degree</label>
+                <input type="text" class="form-control" id="degree" v-model="degree" placeholder="E.g. Bachelor Degree" required>
               </div>
               <div class="form-group mb-3">
-                <label for="descipline"  class="">Descipline</label>
-                <input type="text" class="form-control" id="descipline" v-model="descipline" placeholder="E.g. Computer Science" required>
+                <label for="discipline">Discipline</label>
+                <input type="text" class="form-control" id="discipline" v-model="discipline" placeholder="E.g. Computer Science" required>
               </div>
-<hr class="mt-4 mb-4">
-          <div class="form-group mb-3">
-              <label for="cv" class="d-block">Upload Resume/CV</label>
-              <div class="input-group">
-                  <div class="custom-file">
-                      <input type="file" class="form-control" id="cv" @change="handleFileUpload" accept="image/*" required>
-                      <label class="custom-file-label" for="cv">Choose file</label>
-                  </div>
+              <div class="form-group mb-3" v-if="$route.query.jobType === 'special'">
+                <label for="institution_worked_before">Previous Institution Worked</label>
+                <input type="text" class="form-control" id="institution_worked_before" v-model="institution_worked_before" placeholder="Enter Institution" required>
               </div>
-          </div>
 
-          <div class="form-group mb-3">
-              <label for="cv" class="d-block">Cover Letter</label>
-              <div class="input-group">
-                  <div class="custom-file">
-                      <input type="file" class="form-control" id="cover_letter"  @change="handleFileUpload" accept="image/*" required>
-                      <label class="custom-file-label" for="cv">Choose file</label>
-                  </div>
+              <div class="form-group mb-3" v-if="$route.query.jobType === 'special'">
+                <label for="staff_id_number"  class="">Staff ID</label>
+                <input type="text" class="form-control" id="staff_id_number" v-model="staff_id_number" placeholder="Enter Staff Id" required>
               </div>
-          </div>
+
+              <hr class="mt-3 mb-3">
+  <p><i class="fas fa-exclamation-circle text-danger"></i> Format :(pdf, docx, jpeg, png, jpg)</p>
+            <div class="form-group mb-3">
+              <!-- <div class="form-group mb-3" v-if="$route.query.jobType === 'special'"> -->
+                <label for="letter_of_employment">Letter of Employment</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="letter_of_employment" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'letter_of_employment')">
+                    <label class="custom-file-label" for="letter_of_employment">{{ fileInputs.find(input => input.name === 'letter_of_employment').fileName || 'Choose file' }}</label>
+                  </div>
+                </div>
+              </div>
 
             <div class="form-group mb-3">
-              <label for="cv" class="d-block">Passport Photograph</label>
-              <div class="input-group">
-                  <div class="custom-file">
-                      <input type="file" class="form-control" id="passport"  @change="handleFileUpload" accept="image/*" required>
-                      <label class="custom-file-label" for="cv">Choose file</label>
-                  </div>
+            <label for="cv">Resume</label>
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="cv" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'cv')" required>
+                    <label class="custom-file-label" for="cv">{{ fileInputs.find(input => input.name === 'cv').fileName || 'Choose file' }}</label>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="letter">Cover Letter</label>
+            <div class="input-group">
+              <div class="custom-file">
+                 <input type="file" class="custom-file-input" id="letter" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'letter')" required>
+                    <label class="custom-file-label" for="letter">{{ fileInputs.find(input => input.name === 'letter').fileName || 'Choose file' }}</label>
               </div>
+            </div>
+          </div>
+
+
+           <div class="form-group mb-3">
+            <label for="passport">Passport Photograph</label>
+            <div class="input-group">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="passport" accept=".jpeg,.jpg,.png" @change="handleFileUpload($event, 'passport')" required>
+                <label class="custom-file-label" for="passport">{{ fileInputs.find(input => input.name === 'passport').fileName || 'Choose file' }}</label>
+              </div>
+            </div>
           </div>
 
               <div class="form-group mb-5 mt-5">
-                <button type="submit" class="btn rounded btn-lg form-control text-white" style="background-color:#00C000">Submit Application</button>
-
+                <button type="submit" :disabled="loading" class="btn rounded btn-lg form-control text-white" style="background-color:#00C000">
+                  <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  {{ loading ? 'Submitting...' : 'Submit Application' }}
+                </button>
               </div>
             </form>
           </div>
         </div>
       </div>
-
       <div class="col-md-2"></div>
-
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
-  name: 'ApplicationForm',
+  name: 'RegistrationForm',
   data() {
-    return {
-      email: '',
-      password: '',
+   return {
+      role: this.$route.query.jobId,
+      user: localStorage.getItem('user_id'),
+      loading: false,
       errors: '',
+      employment_type: '',
+      firstname: '',
+      middlename: '',
+      lastname: '',
+      email: '',
+      phone_number: '',
+      school: '',
+      degree: '',
+      discipline: '',
+      institution_worked_before: '',
+      stateOfOrigin: '',
+      staff_id_number: '',
+      cv: null,
+      letter_of_employment: null,
+      letter: null,
+      passport: null,
+      fileInputs: [
+        { name: 'letter_of_employment', fileName: '' },
+        { name: 'cv', fileName: '' },
+        { name: 'letter', fileName: '' },
+        { name: 'passport', fileName: '' }
+      ],
+      states: [
+        'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 'Cross River', 'Delta',
+        'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT - Abuja', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
+        'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers',
+        'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
+      ],
+
     };
   },
   methods: {
-    login() {
-      this.errors = '';
-      axios.post('https://api.cv.scola.raadaa.com/cv/login', { email: this.email, password: this.password })
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: 'dashboardIndex',  params: { userDetails: response.data.success } });
-        })
-        .catch(errors => {
-          this.errors = 'Invalid credentials';
-          console.error(errors);
-        });
+    handleFileUpload(event, name) {
+      const file = event.target.files[0];
+      // Update the fileName property of the corresponding file input object
+      this.fileInputs.find(input => input.name === name).fileName = file ? file.name : '';
+      // Update the data property with the selected file
+      this[name] = file;
     },
-  },
+
+   submitApplication() {
+      this.loading = true;
+      const formData = new FormData();
+      formData.append('role', this.role);
+      formData.append('user', this.user);
+      formData.append('employment_type', this.employment_type);
+      formData.append('firstname', this.firstname);
+      formData.append('middlename', this.middlename);
+      formData.append('lastname', this.lastname);
+      formData.append('email', this.email);
+      formData.append('phone_number', this.phone_number);
+      formData.append('school', this.school);
+      formData.append('degree', this.degree);
+      formData.append('discipline', this.discipline);
+      formData.append('institution_worked_before', this.institution_worked_before);
+      formData.append('state_of_origin', this.stateOfOrigin);
+      formData.append('staff_id_number', this.staff_id_number);
+      formData.append('cv', this.cv);
+      formData.append('letter_of_employment', this.letter_of_employment);
+      formData.append('letter', this.letter);
+      formData.append('passport', this.passport);
+      const token = localStorage.getItem('token');
+
+      // Set up headers for the request
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+
+      axios.post(`https://api.portal.akum.edu.ng/api/akum/career`, formData, config)
+      .then(response => {
+          console.log('Application submitted successfully:', response.data);
+          console.log('User ID:', this.userId);
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Application submitted successfully!',
+            showConfirmButton: false,
+            timer: 1300
+          }).then(() => {
+          window.location.href = 'applicantDashboard';
+        });
+        })
+      .catch(error => {
+        console.log('formData', formData);
+        console.log('letter', this.letter);
+        console.log('passport', this.passport);
+         console.log('letter_of_employment', this.letter_of_employment);
+        console.error('Failed to submit application:', error);
+        let errorMessage = 'Failed to submit application. Please try again later.';
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: errorMessage
+        });
+      })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
+  }
 };
 </script>
 
 <style>
-#login {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
 .custom-file-label::after {
-    content: "Browse";
+  content: "Browse";
 }
 
 .input-group > .custom-file .custom-file-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.btn.rounded, 
+.btn.rounded,
 .btn.rounded:focus {
-    border-radius: 13px !important; /* Adjust the value as needed */
+  border-radius: 13px !important; /* Adjust the value as needed */
 }
-
-
 </style>

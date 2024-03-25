@@ -1,15 +1,17 @@
 <template>
-  <div>
+  <div style="font-family:inter">
     <Applicant_Navbar />
     <welcome_message />
-    <dashboard_job_search />
+    <Job_search />
+    <dashboard_jobs />
     <router-view />
   </div>
 </template>
 
 <script>
 import Applicant_Navbar from '@/components/applicants/Applicant_Navbar.vue';
-import dashboard_job_search from '@/components/applicants/dashboard_job_search';
+import dashboard_jobs from '@/components/applicants/dashboard_jobs.vue';
+import Job_search from '@/components/applicants/Job_search';
 import welcome_message from '@/components/applicants/welcome_message.vue';
 
 
@@ -18,7 +20,8 @@ export default {
   components: {
     Applicant_Navbar,
     welcome_message,
-    dashboard_job_search,
+    Job_search,
+    dashboard_jobs,
   }
 }
 </script>

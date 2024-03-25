@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family:inter">
   <Applicant_Navbar /> 
   <ApplicationForm />
   <router-view></router-view>

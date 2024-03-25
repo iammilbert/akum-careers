@@ -2,7 +2,8 @@
   <div class="container">
     <div class="input-group mb-3 mt-5">
       <div>
-        <h3>{{ greeting }}</h3>
+        <h3>Hello;</h3>
+        <input type="hidden" v-model="user_id" id="user_id">
         <h6>{{ welcomeMessage }}</h6>
       </div>
     </div>
@@ -13,23 +14,14 @@
 export default {
   data() {
     return {
-      user: {
-        firstName: "John",
-        lastName: "Doe"
-      }
+      user_id: localStorage.getItem('user_id'),
+      loading: true
     };
   },
   computed: {
-    greeting() {
-      return `Hello ${this.user.firstName} ${this.user.lastName}`;
-    },
     welcomeMessage() {
       return "Welcome to your Dashboard. Check out what's happening";
     }
   }
 };
 </script>
-
-<style scoped>
-/* Add your scoped styles here */
-</style>

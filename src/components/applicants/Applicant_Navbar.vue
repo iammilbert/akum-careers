@@ -31,24 +31,26 @@
           </li>
 
           <!-- Notification dropdown -->
-          <li class="nav-item mr-3 dropdown">
-            <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:#F2F2F2">
+          <li class="nav-item mr-2 dropdown mb-2" style="height:100%">
+            <button class="btn btn-lg" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:#F2F2F2">
               <i class="bi bi-bell-fill"></i>
-              <span class="badge badge-pill text-danger ms-2">{{ notifications.length }}</span>
+              
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <router-link v-for="(notification, index) in notifications" :key="index" :to="notification.link" class="dropdown-item">{{ notification.title }}</router-link>
+              <!-- <router-link v-for="(notification, index) in notifications" :key="index" :to="notification.link" class="dropdown-item">{{ notification.title }}</router-link> -->
             </div>
           </li>
 
           <!-- User dropdown -->
           <li class="nav-item dropdown">
             <button class="btn dropdown-toggle" type="button" id="userDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:#F2F2F2">
-              <img src="@/assets/profile_images/user1.jpg" alt="User" class="rounded-circle" style="width: 30px; height: 30px; margin-right: 5px;">
-              {{ user.name }}
+              <img src="@/assets/profile_images/avarta.jpg" alt="User" class="rounded-circle" style="width: 32px; height: 100%; margin-right: 5px;">
             </button>
             <div class="dropdown-menu" aria-labelledby="userDropdownMenuButton">
-              <router-link to="/myapplication" class="dropdown-item">My Application</router-link>
+              <router-link to="#" class="dropdown-item">Settings</router-link>
+              <hr>
+              <router-link to="/change-password" class="dropdown-item">Change Password</router-link>
+              <hr>
               <a @click="logout" class="dropdown-item">Logout</a>
             </div>
           </li>
@@ -63,16 +65,11 @@ export default {
   name: 'Applicant_Navbar',
   data() {
     return {
-      notifications: [
-        { title: 'Notification 1', link: '/notification/1' },
-        { title: 'Notification 2', link: '/notification/2' },
-        // Add more notifications as needed
-      ],
-
-     user: {
-        name: "John Doe", // Replace with actual user name
-        picture: "@/assets/profile_images/user1.jpg'", // Replace with actual user picture URL
-      }
+      // notifications: [
+      //   { title: 'Notification 1', link: '/notification/1' },
+      //   { title: 'Notification 2', link: '/notification/2' },
+      //   // Add more notifications as needed
+      // ],
     };
   },
 
@@ -82,7 +79,7 @@ export default {
       // For example, you can clear local storage:
       localStorage.removeItem('user');
       // Then redirect to login page:
-      this.$router.push('/loginForm');
+      this.$router.push('/login');
     }
   }
 }
