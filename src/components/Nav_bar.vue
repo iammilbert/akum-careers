@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-white">
-    <div class="container">
+    <div class="container" style="font-family:inter">
       <div class="d-flex justify-content-start">
         <router-link class="navbar-brand" to="/">
           <img src="@/assets/images/Logo.png" alt="Company Logo" style="height: 50px;">

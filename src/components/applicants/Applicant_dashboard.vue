@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family:inter">
     <Applicant_Navbar />
     <welcome_message />
     <Job_search />

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family:inter">
     <Nav_bar />
     <Landing_page_header />
     <Job_search />

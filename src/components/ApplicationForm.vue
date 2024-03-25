@@ -1,18 +1,18 @@
 <template>
-  <div id="login" class="container align-items-center justify-content-center">
+  <div id="login" class="container align-items-center justify-content-center" style="font-family:inter">
     <div class="row">
       <div class="col-md-2"></div>
-      <div class="col-md-8"  style="font-family: Gebriola;">
+      <div class="col-md-8">
     <h3 class="text-center mb-5" style="background-color:#EAFAF1"><span style="font-size:40px; font-weight-bold" class="text-success">{{ $route.query.faculty }}</span><br> 
    {{ $route.query.department }}</h3>
     
-        <h3 class="text-center mb-3">{{ $route.query.jobTitle }}</h3>
+        <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ $route.query.jobTitle }}</h3>
         <div class="card border-0 shadow" style="background-color:#EAFAF1">
           <div class="card-body">
             <div v-if="errors" style="color: red;">{{ errors }}</div>
             <form @submit.prevent="submitApplication">
               <div class="form-group mb-3">
-               <input type="hidden" id="jobId" class="form-control" v-model="jobId" readonly>
+               <input type="hidden" id="role" class="form-control" v-model="role" readonly>
                 <input type="hidden" class="form-control form-control-lg" id="user" v-model="user" readonly>
                 <label>Select Employment Type</label>
                 <select v-model="employment_type" class="form-control">
@@ -80,7 +80,8 @@
 
               <hr class="mt-3 mb-3">
   <p><i class="fas fa-exclamation-circle text-danger"></i> Format :(pdf, docx, jpeg, png, jpg)</p>
-            <div class="form-group mb-3" v-if="$route.query.jobType === 'special'">
+            <div class="form-group mb-3">
+              <!-- <div class="form-group mb-3" v-if="$route.query.jobType === 'special'"> -->
                 <label for="letter_of_employment">Letter of Employment</label>
                 <div class="input-group">
                   <div class="custom-file">
@@ -101,22 +102,22 @@
           </div>
 
           <div class="form-group mb-3">
-            <label for="cover_letter">Cover Letter</label>
+            <label for="letter">Cover Letter</label>
             <div class="input-group">
               <div class="custom-file">
-                 <input type="file" class="custom-file-input" id="cover_letter" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'cover_letter')" required>
-                    <label class="custom-file-label" for="cover_letter">{{ fileInputs.find(input => input.name === 'cover_letter').fileName || 'Choose file' }}</label>
+                 <input type="file" class="custom-file-input" id="letter" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'letter')" required>
+                    <label class="custom-file-label" for="letter">{{ fileInputs.find(input => input.name === 'letter').fileName || 'Choose file' }}</label>
               </div>
             </div>
           </div>
 
 
            <div class="form-group mb-3">
-            <label for="passport_photo">Passport Photograph</label>
+            <label for="passport">Passport Photograph</label>
             <div class="input-group">
               <div class="custom-file">
-                <input type="file" class="custom-file-input" id="passport_photo" accept=".jpeg,.jpg,.png" @change="handleFileUpload($event, 'passport_photo')" required>
-                <label class="custom-file-label" for="passport_photo">{{ fileInputs.find(input => input.name === 'passport_photo').fileName || 'Choose file' }}</label>
+                <input type="file" class="custom-file-input" id="passport" accept=".jpeg,.jpg,.png" @change="handleFileUpload($event, 'passport')" required>
+                <label class="custom-file-label" for="passport">{{ fileInputs.find(input => input.name === 'passport').fileName || 'Choose file' }}</label>
               </div>
             </div>
           </div>
@@ -144,7 +145,7 @@ export default {
   name: 'RegistrationForm',
   data() {
    return {
-      jobId: this.$route.query.jobId,
+      role: this.$route.query.jobId,
       user: localStorage.getItem('user_id'),
       loading: false,
       errors: '',
@@ -162,13 +163,13 @@ export default {
       staff_id_number: '',
       cv: null,
       letter_of_employment: null,
-      cover_letter: null,
-      passport_photo: null,
+      letter: null,
+      passport: null,
       fileInputs: [
         { name: 'letter_of_employment', fileName: '' },
         { name: 'cv', fileName: '' },
-        { name: 'cover_letter', fileName: '' },
-        { name: 'passport_photo', fileName: '' }
+        { name: 'letter', fileName: '' },
+        { name: 'passport', fileName: '' }
       ],
       states: [
         'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 'Cross River', 'Delta',
@@ -191,7 +192,7 @@ export default {
    submitApplication() {
       this.loading = true;
       const formData = new FormData();
-      formData.append('jobId', this.jobId);
+      formData.append('role', this.role);
       formData.append('user', this.user);
       formData.append('employment_type', this.employment_type);
       formData.append('firstname', this.firstname);
@@ -207,22 +208,37 @@ export default {
       formData.append('staff_id_number', this.staff_id_number);
       formData.append('cv', this.cv);
       formData.append('letter_of_employment', this.letter_of_employment);
-      formData.append('cover_letter', this.cover_letter);
-      formData.append('passport_photo', this.passport_photo);
+      formData.append('letter', this.letter);
+      formData.append('passport', this.passport);
+      const token = localStorage.getItem('token');
 
-      axios.post(`https://api.portal.akum.edu.ng/api/akum/career`, formData)
+      // Set up headers for the request
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      };
 
-        .then(response => {
+      axios.post(`https://api.portal.akum.edu.ng/api/akum/career`, formData, config)
+      .then(response => {
           console.log('Application submitted successfully:', response.data);
           console.log('User ID:', this.userId);
           Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'Application submitted successfully!'
-          });
-          // Optionally, you can redirect to a success page or perform other actions
+            text: 'Application submitted successfully!',
+            showConfirmButton: false,
+            timer: 1300
+          }).then(() => {
+          window.location.href = 'applicantDashboard';
+        });
         })
       .catch(error => {
+        console.log('formData', formData);
+        console.log('letter', this.letter);
+        console.log('passport', this.passport);
+         console.log('letter_of_employment', this.letter_of_employment);
         console.error('Failed to submit application:', error);
         let errorMessage = 'Failed to submit application. Please try again later.';
         if (error.response && error.response.data && error.response.data.message) {

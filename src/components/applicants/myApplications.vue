@@ -13,15 +13,16 @@
         <div v-for="(role, index) in paginatedRoles" :key="index" class="card mt-3">
           <div class="row g-0 p-3 card-body">
               <div class="col-7">
-                <h5 style="font-size:14px"><b>{{role.faculty ? role.faculty.name :'Unkown Faculty'}}</b><br>{{role.dept ? role.dept.name : 'Unknown Department' }}</h5>
-                <p>{{ role.category ? role.category.category : 'Unknown Category' }}</p>
+                <h5 style="font-size:14px"><b>{{role.firstname ? role.firstname :'Unkown Faculty'}}</b><br>{{role.email ? role.email : 'Unknown Department' }}</h5>
+                <p>{{ role.degree ? role.degree : 'Unknown Category' }}</p>
               </div>
             <div class="col-5">
               <div class="modal-footer bg-white">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button class="btn mr-2 btn-sm" type="button" style="font-size:14px; background-color:#D3D1B3" @click="openModal(role)">View details</button>
-                  <h6 v-if="role.status === 'Approve'" style="color:#00C000; font-size:14px;" class="btn " type="button">{{role.status}}</h6>
+                  <button class="btn mr-2 btn-sm" type="button" style="font-size:12px; background-color:#D3D1B3" @click="openModal(role)">View details</button>
+                  <h6 v-if="role.status === 'Approve'" style="color:#00C000; font-size:14px;" class="btn btn-sm" type="button">{{role.status}}</h6>
                   <h6 v-if="role.status === 'Pending'" style="color:#D3D1B3; font-size:14px;" class="btn text-dark" type="button">{{ role.status }}</h6>
+                 <h6 v-else style="color:#D3D1B3; font-size:14px;" class="btn text-dark"  type="button">Pending</h6>
                 </div>
               </div>
             </div>
@@ -53,17 +54,31 @@
 
   <!-- Modal -->
   <div class="modal" tabindex="-1" role="dialog" :class="{ 'show': showModal }">
-    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ selectedRole }}</h5>
-          <h6 class="badge badge-success">{{ selectedRole }}</h6>
+          <h5 class="modal-title"><b style="font-size:30px; font-weight:500px">
+            {{ selectedRole ? selectedRole.firstname  : '' }}
+          </b><br>
+          <h6 class="badge badge-success">{{ selectedRole ? selectedRole.email : '' }}</h6>
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <h5>{{ selectedRole }}</h5>
+          <div v-if="selectedRole">
+            <h5>About Role </h5>
+            <p>{{ selectedRole.discipline }}</p>
+            <h5 class="mt-3"><strong>Responsibilities:</strong> </h5>
+            <p>{{ selectedRole.degree }}</p>
+            <h5 class="mt-3"><strong>Requirements:</strong></h5>
+            <p>{{ selectedRole.lastname }}</p>
+            <p><strong>Application Closing Date:</strong> {{ formatClosingDate(selectedRole.phone_number) }}</p>
+          </div>
+          <div v-else>
+            <p>No role selected.</p>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
@@ -101,8 +116,29 @@ export default {
   },
   
   methods: {
+      formatClosingDate(dateString) {
+      const date = new Date(dateString);
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      return formattedDate;
+    },
     fetchUserRoles() {
-      fetch(`https://api.portal.akum.edu.ng/api/akum/career/applicant/${this.user_id}`)
+    const token = localStorage.getItem('token');
+      if (!token) {
+          console.error('Token not found in local storage');
+          return;
+        }
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+      fetch(`https://api.portal.akum.edu.ng/api/akum/career/applicant/${this.user_id}`, requestOptions)
         .then(response => response.json())
         .then(data => {
           if (data.success) {

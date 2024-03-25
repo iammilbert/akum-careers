@@ -1,6 +1,6 @@
 <template>
   <header class="header-container">
-    <div class="header-content">
+    <div class="header-content" style="font-family:inter">
       <div class="text-content mb-2">
         <h1 class="bold">AKUM</h1>
         <h1 class="bold">Careers</h1>

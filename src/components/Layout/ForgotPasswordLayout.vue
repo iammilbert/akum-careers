@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family:inter">
     <Nav_bar />
     <ForgotPassword />
     <router-view></router-view>

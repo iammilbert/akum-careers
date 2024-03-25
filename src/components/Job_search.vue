@@ -1,5 +1,5 @@
 <template>
-  <div class="container mb-5">
+  <div class="container mb-5" style="font-family:inter">
     <div class="input-group mb-3 mt-5">
       <div class="text-center">
         <h1>Available Opportunities</h1>

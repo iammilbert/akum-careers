@@ -1,5 +1,5 @@
 <template>
-  <div id="login" class="container align-items-center justify-content-center vh-100">
+  <div id="login" class="container align-items-center justify-content-center vh-100" style="font-family:inter">
     <div class="row">
 
       <div class="col-md-3"></div>

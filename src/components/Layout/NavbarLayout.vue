@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family:inter">
     <Nav_bar />
     <router-view></router-view>
   </div>

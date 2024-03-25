@@ -1,6 +1,6 @@
 <template>
   <!-- Modal -->
-  <div class="modal" tabindex="-1" role="dialog" :class="{ 'show': showModal }">
+  <div class="modal" tabindex="-1" role="dialog" :class="{ 'show': showModal }" style="font-family:inter">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">

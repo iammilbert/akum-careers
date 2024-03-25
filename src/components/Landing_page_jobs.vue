@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="font-family:inter">
     <div class="row">
       <!-- Job Categories -->
       <div class="col-lg-5 mb-4 mb-lg-0">
@@ -92,11 +92,11 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal" tabindex="-1" role="dialog" :class="{ 'show': showModal }">
+  <div class="modal" tabindex="-1" role="dialog" :class="{ 'show': showModal }" style="font-family:inter">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><b style="font-size:34px;">
+          <h5 class="modal-title"><b style="font-size:30px; font-weight:500px">
             {{ selectedRole ? selectedRole.title  : '' }}
           </b><br>
           <h6 class="badge badge-success">{{ selectedRole ? selectedRole.dept.name : '' }}</h6>
@@ -269,8 +269,6 @@ computed: {
   }
 };
 </script>
-
-
 
 
 

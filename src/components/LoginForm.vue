@@ -6,7 +6,7 @@
 
       <div class="col-md-6">
         <div class="card border-0 shadow">
-          <div class="card-body">
+          <div class="card-body" style="font-family:inter">
             <h2 class="card-title text-center font-weight-bold">Login</h2>
             <h6 class="card-title text-center mb-4">Welcome back, <br>Login to check your application status</h6>
             
@@ -146,10 +146,11 @@ export default {
   color: red;
 }
 #login {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+ font-family: 'Inter', sans-serif;
   color: #2c3e50;
   margin-top: 60px;
 }
+
 .error {
   color: red;
 }
