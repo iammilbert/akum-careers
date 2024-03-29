@@ -135,7 +135,7 @@ export default {
       axios
         .get(`${this.apiUrl}${this.searchQuery}`)
         .then(response => {
-          this.searchResults = response.data.result;
+          this.searchResults = response.data;
           this.fetchCategoryData();
           console.log('data', this.searchResults);
         })
