@@ -8,13 +8,13 @@
         <!-- Category Section -->
 <div class="row">
   <div class="read-more">
-    <button class="btn btn-lg font-weight-bold" type="button" data-toggle="collapse" data-target="#categoryDropdown" aria-expanded="true" aria-controls="categoryDropdown" @click="toggleCollapse">
+    <button class="btn btn-lg font-weight-bold" type="button" @click="toggleCollapse('category')" aria-expanded="true" aria-controls="categoryDropdown">
       Categories 
       <span style="margin-left:200px;">
         <i class="bi bi-caret-down-fill" style="font-size:20px;"></i>
       </span>
     </button>
-    <div class="collapse" :class="{ 'show': isCollapsed }" id="categoryDropdown">
+    <div class="collapse" :class="{ 'show': !isCategoryCollapsed }" id="categoryDropdown">
       <div class="list-group mt-2 ml-3">
         <label v-for="(category, index) in categories" :key="index" class="list-group-item custom-list-item mt-3">
           <input class="form-check-input me-2" type="checkbox" v-model="checkedCategories" :value="category">
@@ -26,26 +26,25 @@
 </div>
 
         <!-- Schedule Section -->
-        <div class="row">
-          <div class="read-more">
-            <button class="btn btn-lg font-weight-bold" type="button" data-toggle="collapse" data-target="#scheduleDropdown" aria-expanded="true" aria-controls="scheduleDropdown" @click="toggleScheduleCollapse">
-              Schedule 
-              <span style="margin-left:215px;">
-                <i class="bi bi-caret-down-fill" style="font-size:20px;"></i>
-              </span>
-            </button>
-            <div class="collapse" :class="{ 'show': isScheduleCollapsed }" id="scheduleDropdown">
-              <div class="list-group mt-2 ml-3">
+    <div class="row">
+      <div class="read-more">
+        <button class="btn btn-lg font-weight-bold" type="button" @click="toggleCollapse('schedule')" aria-expanded="true" aria-controls="scheduleDropdown">
+          Schedule 
+          <span style="margin-left:215px;">
+            <i class="bi bi-caret-down-fill" style="font-size:20px;"></i>
+          </span>
+        </button>
+        <div class="collapse" :class="{'show': !isScheduleCollapsed }" id="scheduleDropdown">
+          <div class="list-group mt-2 ml-3">
             <label v-for="(option, index) in scheduleOptions" :key="index" class="list-group-item custom-list-item mt-3">
               <input class="form-check-input me-2" type="checkbox" v-model="selectedSchedules" :value="option">
               {{ option }}
             </label>
-
-              </div>
-            </div>
           </div>
         </div>
       </div>
+    </div>
+    </div>
 
   <!-- Open Roles -->
       <div class="col-lg-7">
@@ -142,8 +141,8 @@ export default {
       selectedRole: null,
       itemsPerPage: 5,
       currentPage: 1,
-      isCollapsed: false,
-      isScheduleCollapsed: false // Flag to track collapse state for schedule dropdown
+      isCategoryCollapsed: true,
+      isScheduleCollapsed: true,
     };
   },
 computed: {
@@ -189,15 +188,14 @@ computed: {
       });
       return formattedDate;
     },
-    toggleCollapse() {
-      this.isCollapsed = !this.isCollapsed;
-    },
-    toggleScheduleCollapse() {
-      this.isScheduleCollapsed = !this.isScheduleCollapsed;
-      if (!this.isScheduleCollapsed) {
-        this.selectedSchedules = [];
+    toggleCollapse(section) {
+      if (section === 'category') {
+        this.isCategoryCollapsed = !this.isCategoryCollapsed;
+      } else if (section === 'schedule') {
+        this.isScheduleCollapsed = !this.isScheduleCollapsed;
       }
     },
+
 
     openModal(role) {
       this.selectedRole = role;
