@@ -25,6 +25,11 @@
           <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ loading ? 'Processing...' : 'Create Account' }}
         </button>
+
+          <div class="form-group mb-3 ml-1 mt-4">
+                Already Registered?
+                <router-link to="/login" class="font-weight-bold">Login now.</router-link>
+              </div>
             </div>
           </form>
         </div>
@@ -68,8 +73,10 @@ export default {
             title: 'Registration',
             text: 'Account Created Successfully',
             showConfirmButton: false,
-            timer: 4000,
-          });
+            timer: 1500,
+          }).then(() => {
+          window.location.href = '/login';
+        });
 
           // Clear email and password fields
           this.email = '';

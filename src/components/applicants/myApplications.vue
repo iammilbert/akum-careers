@@ -13,7 +13,7 @@
         <div v-for="(role, index) in paginatedRoles" :key="index" class="card mt-3">
           <div class="row g-0 p-3 card-body">
               <div class="col-7">
-                <h5 style="font-size:14px"><b>{{role.firstname ? role.firstname :'Unkown Faculty'}}</b><br>{{role.email ? role.email : 'Unknown Department' }}</h5>
+                <h5 style="font-size:14px"><b>{{role.employment_type ? role.employment_type :'Unkown Faculty'}}</b><br>{{role.firstname ? role.firstname : 'Unknown Department' }}</h5>
                 <p>{{ role.degree ? role.degree : 'Unknown Category' }}</p>
               </div>
             <div class="col-5">
@@ -143,7 +143,7 @@ export default {
         .then(data => {
           if (data.success) {
             // Assuming data.jobApplication is the array of roles
-            this.roles = data.jobApplication;
+            this.roles = data.data;
             this.loading = false;
           } else {
             console.error('Job application retrieval failed:', data.message);

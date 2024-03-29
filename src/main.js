@@ -2,9 +2,12 @@ import { createApp } from 'vue'
 import App from './App.vue';
 import './dependency/bootstrap';
 import './dependency/fontawesome';
+import vueCountriesCities from "vue-countries-cities";
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPageLayout from './components/Layout/LandingPageLayout.vue';
 import ApplicationFormLayout from './components/Layout/ApplicationFormLayout.vue';
+import ConferenceFormLayout from './components/Layout/ConferenceFormLayout.vue';
+import EducationalQualificationFormLayout from './components/Layout/EducationalQualificationFormLayout.vue';
 import MyApplicationPageLayout from './components/applicants/Layouts/MyApplicationPageLayout.vue';
 import LoginPageLayout from './components/Layout/LoginPageLayout.vue';
 import ForgotPasswordLayout from './components/Layout/ForgotPasswordLayout.vue';
@@ -53,7 +56,8 @@ const routes = [
   //     props: route => ({
   //      department: route.query.dept,
   //      faculty: route.query.faculty,
-  //      jobTitle: route.query.title
+  //      jobTitle: route.query.title,
+  //      job_type: route.query.job_type
   // })
   },
 
@@ -61,6 +65,17 @@ const routes = [
     path: '/change-password',
     name:'change-password',
     component: ChangePasswordLayout,
+  },
+
+  {
+    path: '/form-b',
+    name:'education-form',
+    component: EducationalQualificationFormLayout,
+  },
+    {
+    path: '/form-c',
+    name:'conference-form',
+    component: ConferenceFormLayout,
   }
 ];
 
@@ -70,6 +85,7 @@ const router = createRouter({
 });
 
 const app = createApp(App);
+app.component("vueCountriesCities", vueCountriesCities);
 app.use(router);
 app.mount('#app');
 
