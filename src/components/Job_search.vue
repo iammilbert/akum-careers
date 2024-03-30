@@ -1,5 +1,5 @@
 <template>
-  <div class="container mb-5" style="font-family: inter">
+  <div :class="containerClasses" style="font-family:inter">
     <div class="input-group mb-3 mt-5">
       <div class="text-center">
         <h1>Available Opportunities</h1>
@@ -93,6 +93,24 @@ import axios from 'axios';
 import { debounce } from 'lodash';
 
 export default {
+
+  computed: {
+    containerClasses() {
+      return {
+        'container-fluid': this.isLargeScreen || this.isTabletScreen,
+        'pl-5': this.isLargeScreen,
+        'pr-5': this.isLargeScreen,
+        'mb-5': this.isLargeScreen,
+      };
+    },
+
+    isLargeScreen() {
+      return window.innerWidth >= 992; // Bootstrap md breakpoint
+    },
+    isTabletScreen() {
+      return window.innerWidth < 992; // Bootstrap sm breakpoint
+    }
+},
   data() {
     return {
       showModal: false,

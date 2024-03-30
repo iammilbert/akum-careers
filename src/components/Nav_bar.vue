@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-white">
-    <div class="container" style="font-family:inter">
+    <div :class="containerClasses" style="font-family:inter">
       <div class="d-flex justify-content-start">
         <router-link class="navbar-brand" to="/">
           <img src="@/assets/images/Logo.png" alt="Company Logo" style="height: 50px;">
@@ -25,9 +25,15 @@
           <li class="nav-item">
             <router-link class="nav-link" to="#">Success Stories</router-link>
           </li>
-          <li class="nav-item mr-5">
+          <li class="nav-item">
             <router-link class="nav-link" to="#">FAQ</router-link>
           </li>
+        </ul>
+      </div>
+
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
           <li class="nav-item">
             <button class="btn btn-sm" style="background-color:#00C000;">
               <router-link to="/login" class="nav-link text-white">
@@ -43,7 +49,24 @@
 
 <script>
 export default {
-  name: 'Nav_bar'
+  name: 'Nav_bar',
+
+  computed: {
+    containerClasses() {
+      return {
+        'container-fluid': this.isLargeScreen || this.isTabletScreen,
+        'pl-5': this.isLargeScreen,
+        'pr-5': this.isLargeScreen
+      };
+    },
+
+    isLargeScreen() {
+      return window.innerWidth >= 992; // Bootstrap md breakpoint
+    },
+    isTabletScreen() {
+      return window.innerWidth < 992; // Bootstrap sm breakpoint
+    }
+}
 }
 </script>
 
@@ -54,12 +77,7 @@ export default {
 
 .navbar-dark .navbar-nav .nav-link {
   color: #131212; /* Light text color */
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'inter';
   cursor: pointer;
-}
-
-/* Style for login button */
-.navbar-nav .btn-dark {
-  margin-left: 10px; /* Adjust margin for spacing */
 }
 </style>

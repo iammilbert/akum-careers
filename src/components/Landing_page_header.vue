@@ -5,7 +5,8 @@
         <h3 class="bold d-block d-md-none" style="font-size:40px;">AKUM Careers</h3> <!-- Visible on small screens -->
         <h1 class="bold d-none d-md-block d-sm-none">AKUM</h1> <!-- Visible on medium and larger screens -->
         <h1 class="bold d-none d-md-block d-sm-none">Careers</h1> <!-- Visible on medium and larger screens -->
-        <p style="font-size:18px;">Work towards a future you believe in. At Akum, every employee plays a part in our mission for a better tomorrow</p>
+        <p style="font-size:18px;" class="text-center d-block d-md-none">Work towards a future you believe in. At Akum, every employee plays a part in our mission for a better tomorrow</p>
+        <p style="font-size:18px;" class="d-none d-md-block d-sm-none">Work towards a future you believe in. At Akum, every employee plays a part in our mission for a better tomorrow</p>
       </div>
       <div class="login-form rounded" id="createAccount">
         <div class="card">
@@ -147,7 +148,7 @@ export default {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+ 
 }
 
 .text-content {

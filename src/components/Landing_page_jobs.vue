@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="font-family:inter">
+  <div :class="containerClasses" style="font-family:inter">
     <div class="row">
       <!-- Job Categories -->
       <div class="col-lg-5 mb-4 mb-lg-0">
@@ -146,6 +146,20 @@ export default {
     };
   },
 computed: {
+    containerClasses() {
+      return {
+        'container-fluid': this.isLargeScreen || this.isTabletScreen,
+        'pl-5': this.isLargeScreen,
+        'pr-5': this.isLargeScreen,
+      };
+    },
+
+    isLargeScreen() {
+      return window.innerWidth >= 992; // Bootstrap md breakpoint
+    },
+    isTabletScreen() {
+      return window.innerWidth < 992; // Bootstrap sm breakpoint
+    },
   totalPages() {
     if (Array.isArray(this.filteredRoles)) {
       return Math.ceil(this.filteredRoles.length / this.itemsPerPage);
