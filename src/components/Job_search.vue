@@ -23,27 +23,20 @@
       </div>
     </div>
     <div v-if="searchResults && searchResults.length > 0">
-      <div v-for="result in searchResults" :key="result._id" class="card mt-3">
+      <div v-for="searchResult in searchResults" :key="searchResult._id" class="card mt-3">
         <div class="row g-0 p-3 card-body">
-          <div class="col-7">
-            <h5 style="font-size: 14px;"><b>{{ result.faculty.name }}</b></h5>
-            <p>{{ result.department }}</p>
-            <p>{{ getCategoryName(result.category) }}</p>
+          <div class="col-md-7 col-sm-12">
+            <h5 style="font-size: 14px;"><b>{{ searchResult.faculty.name }}</b></h5>
+            <p>{{ searchResult.dept.name }}</p>
+            <p>{{ searchResult.category.category }}</p>
           </div>
-          <div class="col-5">
-            <div class="modal-footer bg-white">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  class="btn mr-3 btn-sm mb-2"
-                  type="button"
-                  style="font-size: 14px; background-color: #D3D1B3"
-                  @click="openModal(result)"
-                >
-                  View details
-                </button>
-                <button style="font-size: 14px;" type="button" class="btn btn-success mb-2" @click="applyChanges(result)">
-                  Apply Now
-                </button>
+          
+          <div class="col-md-5 col-sm-12">
+            <div class="bg-white justify-content-between">
+              <div class="d-grid gap-2 d-md-flex d-flex justify-content-md-end justify-content-between">
+                <button class="btn mr-2 btn-sm mb-2" type="button" style="font-size:14px; background-color:#D3D1B3" @click="openModal(searchResult)">View details</button>
+                
+                <router-link to="/login" style="font-size:14px;" class="btn btn-outline-success mb-2" type="button">Apply Now</router-link>
               </div>
             </div>
           </div>
@@ -55,38 +48,44 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal" tabindex="-1" role="dialog" :class="{ 'show': showModal }" style="display: block;" v-if="showModal">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            <b style="font-size: 34px;">{{ selectedResult ? selectedResult.title : '' }}</b><br />
-            <h6 class="badge badge-success">{{ selectedResult ? selectedResult.department.name : '' }}</h6>
-          </h5>
-          <button type="button" class="close" aria-label="Close" @click="closeModal">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <h5><strong>About Role</strong></h5>
-          <p>{{ selectedResult ? selectedResult.about_role : '' }}</p>
-          <h5><strong>Responsibilities:</strong></h5>
-          <p>{{ selectedResult ? selectedResult.responsibilities : '' }}</p>
+<!-- Modal -->
+<div class="modal" tabindex="-1" role="dialog" style="font-family: inter; display: block;" v-if="showModal" :class="{ 'animate-slide-up': showModal }">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document" style="margin-bottom: 0;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><b style="font-size: 30px; font-weight: 500px">
+          {{ searchResult ? searchResult.title : '' }}
+        </b><br>
+        <h6 class="badge badge-success">{{ searchResult ? searchResult.dept.name : '' }}</h6>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div v-if="searchResult">
+          <h5>About Role </h5>
+          <p>{{ searchResult.about_role }}</p>
+          <h5 class="mt-3"><strong>Responsibilities:</strong> </h5>
+          <p>{{ searchResult.responsibilities }}</p>
           <h5 class="mt-3"><strong>Requirements:</strong></h5>
-          <p>{{ selectedResult ? selectedResult.requirements : '' }}</p>
-          <h5 class="mt-3"><strong>Application Closing Date</strong></h5>
-          <p>{{ formatClosingDate(selectedResult ? selectedResult.closing_date : '') }}</p>
-          <h5 class="mt-3"><strong>Method of Application</strong></h5>
-          <p></p>
+          <p>{{ searchResult.requirments }}</p>
+          <p><strong>Application Closing Date:</strong> {{ formatClosingDate(searchResult.closing_date) }}</p>
+
+          <p><strong>Date Applied:</strong> {{ formatClosingDate(searchResult.createdAt) }}</p>
         </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
-          <button type="button" class="btn btn-success" @click="applyChanges(selectedResult)">Apply Now</button>
+        <div v-else>
+        createdAt
+          <p>No role selected.</p>
         </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
+        <router-link to="/login" style="font-size:14px;" class="btn btn-outline-success mb-2" type="button">Apply Now</router-link>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -102,7 +101,6 @@ export default {
       searchResults: [],
       searching: false,
       apiUrl: 'https://api.portal.akum.edu.ng/api/akum-career/search/',
-      categoryData: {}
     };
   },
   methods: {
@@ -114,59 +112,25 @@ export default {
         day: 'numeric',
       });
     },
-    openModal(result) {
-      this.selectedResult = result;
+    openModal(searchResult) {
+      this.searchResult = searchResult;
       this.showModal = true;
     },
     closeModal() {
       this.showModal = false;
-    },
-    applyChanges(result) {
-      if (result) {
-        const { title, department, category: faculty, _id: jobId } = result;
-        this.$router.push({
-          path: '/login',
-          query: { jobTitle: title, department, faculty: this.getCategoryName(faculty), jobId },
-        });
-      }
     },
     search: debounce(function() {
       this.searching = true;
       axios
         .get(`${this.apiUrl}${this.searchQuery}`)
         .then(response => {
-          this.searchResults = response.data;
-          this.fetchCategoryData();
-          console.log('data', this.searchResults);
+          this.searchResults = response.data.data;
         })
         .catch(error => {
           console.error('Error searching:', error);
           this.searching = false;
         });
     }, 300),
-fetchCategoryData() {
-  if (this.searchResults && this.searchResults.length > 0) {
-    const categoryIds = Array.from(new Set(this.searchResults.map(result => result.category)));
-    categoryIds.forEach(categoryId => {
-      if (!this.categoryData[categoryId]) {
-        axios
-          .get(`https://api.portal.akum.edu.ng/api/job/categories/${categoryId}`)
-          .then(response => {
-            this.$set(this.categoryData, categoryId, response.data.category);
-          })
-          .catch(error => {
-            console.error('Error fetching category data:', error);
-          });
-      }
-    });
-  }
-  this.searching = false;
-},
-
-    getCategoryName(categoryId) {
-      const category = this.categoryData[categoryId];
-      return category ? category.category : 'Fetching...';
-    },
   },
 };
 </script>
