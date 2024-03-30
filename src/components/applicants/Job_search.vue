@@ -72,7 +72,7 @@
           <p>{{ searchResult.requirments }}</p>
           <p><strong>Application Closing Date:</strong> {{ formatClosingDate(searchResult.closing_date) }}</p>
 
-          <p><strong>Date Applied:</strong> {{ formatClosingDate(searchResult.createdAt) }}</p>
+          <!-- <p><strong>Date Applied:</strong> {{ formatClosingDate(searchResult.createdAt) }}</p> -->
         </div>
         <div v-else>
         createdAt

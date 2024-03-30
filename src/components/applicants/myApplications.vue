@@ -74,7 +74,8 @@
             <p>{{ selectedRole.degree }}</p>
             <h5 class="mt-3"><strong>Requirements:</strong></h5>
             <p>{{ selectedRole.lastname }}</p>
-            <p><strong>Application Closing Date:</strong> {{ formatClosingDate(selectedRole.phone_number) }}</p>
+            <p><strong>Application Closing Date:</strong> {{ formatClosingDate(selectedRole.closing_date) }}</p>
+            <p><strong>Date Applied:</strong> {{ formatClosingDate(selectedRole.createdAt) }}</p>
           </div>
           <div v-else>
             <p>No role selected.</p>
