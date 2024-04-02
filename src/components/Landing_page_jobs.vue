@@ -167,6 +167,7 @@ computed: {
       return 0; // or any default value you prefer
     }
   },
+  
   paginatedRoles() {
     if (Array.isArray(this.filteredRoles)) {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;

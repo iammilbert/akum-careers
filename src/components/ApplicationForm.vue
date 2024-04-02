@@ -11,7 +11,11 @@
         <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ jobTitle }}</h3>
 
         <div class="progress mb-3">
-          <div class="progress-bar" role="progressbar" :style="{ width: (currentStep * 33.33) + '%' }" aria-valuenow="33.33" aria-valuemin="0" aria-valuemax="100">{{ currentStep * 33.33 }}%</div>
+          <div v-if="currentStep==1" class="progress-bar" role="progressbar" :style="{ width: (0 * 33.33) + '%' }" aria-valuenow="currentStep * 33.33" aria-valuemin="0" aria-valuemax="100">{{ (currentStep * 33.33).toFixed(2) }}%</div>
+
+          <div v-if="currentStep===3" class="progress-bar" role="progressbar" :style="{ width: (currentStep * 33.33) + '%' }" aria-valuenow="currentStep * 33.33" aria-valuemin="0" aria-valuemax="100">{{ (currentStep * 33.33).toFixed(2) }}%</div>
+
+          <div v-if="currentStep===2" class="progress-bar" role="progressbar" :style="{ width: (currentStep * 33.33) + '%' }" aria-valuenow="currentStep * 33.33" aria-valuemin="0" aria-valuemax="100">{{ (currentStep * 33.33).toFixed(2) }}%</div>
         </div>
       </div>
       <div class="col-md-1"></div>
@@ -43,7 +47,7 @@
                       <option value="contract">Contract</option>
                       <option value="internship">Internship</option>
                     </select>
-                    <small class="text-danger">{{ employment_typeError }}</small> 
+                    <small class="text-danger" v-if="employment_typeError">{{ employment_typeError }}</small> 
                   </div>
                   <div class="form-group mb-3">
                     <label for="middlename">Middle Name</label>
@@ -52,12 +56,12 @@
                   <div class="form-group mb-3">
                     <label for="email">Email Address</label>
                     <input type="email" class="form-control" id="email" v-model="email" placeholder="e.g. admin@example.com" autocomplete="email">
-                     <small class="text-danger">{{ emailError }}</small> 
+                     <small class="text-danger" v-if="emailError">{{ emailError }}</small> 
                   </div>
                   <div class="form-group mb-3">
                     <label for="dob">Date of Birth</label>
                     <input type="date" class="form-control" id="dob" v-model="dob" autocomplete="date">
-                     <small class="text-danger">{{ dobError }}</small> 
+                     <small class="text-danger" v-if="dobError">{{ dobError }}</small> 
                   </div>
 
                   <div class="form-group mb-3">
@@ -66,18 +70,18 @@
                       <option value="" disabled selected>Select Nationality</option>
                       <option v-for="nationality in nationalities" :key="nationality" :value="nationality">{{ nationality }}</option>
                     </select>
-                     <small class="text-danger">{{ nationalityError }}</small> 
+                     <small class="text-danger" v-if="nationalityError">{{ nationalityError }}</small> 
                   </div>
                   <div class="form-group mb-3">
                     <label for="local_govt">Local Government</label>
                     <input type="text" class="form-control" id="local_govt" v-model="local_govt" placeholder="Enter Local Govt">
-                    <small class="text-danger">{{ lgaError }}</small> 
+                    <small class="text-danger" v-if="lgaError">{{ lgaError }}</small> 
                   </div>
                   
                   <div class="form-group mb-3">
                     <label for="address">Address</label>
                     <textarea v-model="address" class="form-control" placeholder="Enter Address"></textarea>
-                    <small class="text-danger">{{ addressError }}</small> 
+                    <small class="text-danger" v-if="addressError">{{ addressError }}</small> 
                   </div>
                 </div>
 
@@ -85,17 +89,17 @@
                   <div class="form-group mb-3">
                     <label for="firstname">First Name</label>
                     <input type="text" class="form-control" id="firstname" v-model="firstname" placeholder="Enter your first name" autocomplete="first name">
-                    <small class="text-danger">{{ firstNameError }}</small> 
+                    <small class="text-danger" v-if="firstNameError">{{ firstNameError }}</small> 
                   </div>
                   <div class="form-group mb-3">
                     <label for="lastname">Last Name</label>
                     <input type="text" class="form-control" id="lastname" v-model="lastname" placeholder="Enter your last name" autocomplete="last name">
-                    <small class="text-danger">{{ lastNameError }}</small> 
+                    <small class="text-danger" v-if="lastNameError">{{ lastNameError }}</small> 
                   </div>
                   <div class="form-group mb-3">
                     <label for="phone_number">Phone number</label>
                     <input type="tel" class="form-control" id="phone_number" v-model="phone_number" placeholder="08162198753" autocomplete="phone number">
-                    <small class="text-danger">{{ phone_numberError }}</small> 
+                    <small class="text-danger" v-if="phone_numberError">{{ phone_numberError }}</small> 
                   </div>
 
                  <div class="form-group mb-3">
@@ -104,7 +108,7 @@
                       <option value="" disabled selected>Select Gender</option>
                       <option v-for="gender in genders" :key="gender" :value="gender">{{ gender }}</option>
                     </select>
-                    <small class="text-danger">{{ genderError }}</small>
+                    <small class="text-danger" v-if="genderError">{{ genderError }}</small>
                     
                   </div>
 
@@ -114,13 +118,13 @@
                       <option value="" disabled selected>Select State</option>
                       <option v-for="state in nigeriaStates" :key="state" :value="state">{{ state }}</option>
                     </select>
-                    <small class="text-danger">{{ stateError }}</small>
+                    <small class="text-danger" v-if="stateError">{{ stateError }}</small>
                   </div>
 
                   <div class="form-group mb-3">
                     <label for="city">City</label>
                     <input type="text" class="form-control" id="city" v-model="city" placeholder="Enter City" >
-                    <small class="text-danger">{{ cityError}}</small>
+                    <small class="text-danger" v-if="cityError">{{ cityError}}</small>
                   </div>
                 </div>
               </div>
@@ -150,55 +154,55 @@
               <div class="form-group mb-3">
                 <label for="name_of_school">Name of School</label>
                 <input type="text" class="form-control" id="name_of_school" v-model="name_of_school" placeholder="Enter School name">
-                 <small class="text-danger">{{ schoolError }}</small>
+                 <small class="text-danger" v-if="schoolError">{{ schoolError }}</small>
               </div>
 
                <div class="form-group mb-3">
                 <label for="department">Department</label>
                 <input type="text" class="form-control" id="department" v-model="department" placeholder="Enter department">
-                <small class="text-danger">{{ departmentError }}</small>
+                <small class="text-danger" v-if="departmentError">{{ departmentError }}</small>
               </div>
 
               <div class="form-group mb-3">
                 <label for="specialization">Specialization</label>
                 <input type="text" class="form-control" id="specialization" v-model="specialization" placeholder="E.g. Enter specialization">
-                 <small class="text-danger">{{ specializationError }}</small>
+                 <small class="text-danger" v-if="specializationError">{{ specializationError }}</small>
               </div>
               <div class="form-group mb-3">
                 <label for="date_of_first_employment">Date of First Employment</label>
                 <input type="date" class="form-control" id="date_of_first_employment" v-model="date_of_first_employment">
-                 <small class="text-danger">{{ dateOfFirstEmploymentError }}</small>
+                 <small class="text-danger" v-if="dateOfFirstEmploymentError">{{ dateOfFirstEmploymentError }}</small>
               </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group mb-3">
                   <label for="degree">Degree</label>
                   <input type="text" class="form-control" id="degree" v-model="degree" placeholder="E.g. Bachelor Degree">
-                   <small class="text-danger">{{ degreeError }}</small>
+                   <small class="text-danger" v-if="degreeError">{{ degreeError }}</small>
                 </div>
                 <div class="form-group mb-3">
                   <label for="discipline">Discipline</label>
                   <input type="text" class="form-control" id="discipline" v-model="discipline" placeholder="E.g. Computer Science">
-                   <small class="text-danger">{{ disciplineError }}</small>
+                   <small class="text-danger" v-if="disciplineError">{{ disciplineError }}</small>
                 </div>
 
               <!-- <div class="form-group mb-3" v-if="$route.query.jobType === 'special'"> -->
               <div class="form-group mb-3">                
               <label for="previous_employer">Previous Employer/Institution</label>
                 <input type="text" class="form-control" id="previous_employer" v-model="previous_employer" placeholder="Enter Institution">
-                 <small class="text-danger">{{ previous_employerError }}</small>
+                 <small class="text-danger" v-if="previous_employerError">{{ previous_employerError }}</small>
               </div>
 
               <div class="form-group mb-3" >
                 <label for="professional_association">Professional Associations Membership</label>
                 <textarea type="text" class="form-control" id="professional_association" v-model="professional_association" placeholder="Enter Professional Association Membership" ></textarea>
-                 <small class="text-danger">{{ associationMembershipError }}</small>
+                 <small class="text-danger" v-if="associationMembershipError">{{ associationMembershipError }}</small>
               </div>
             </div>
           </div>
 
            <div class="modal-footer justify-content-between">
-                  <button type="button" class="btn btn-outline-primary" @click="previousStep" >Back</button>
+                  <button type="button" class="btn btn-outline-primary" @click="previousStep" >Previous</button>
 
                   <button type="button" class="btn btn-primary" @click="validateStep2AndProceed">Next</button>
               </div>
@@ -222,58 +226,58 @@
                     <div class="form-group mb-3">                                
                     <label>No. of International Conferences</label>
                     <input type="number" id="no_of_international_conferences" class="form-control" v-model="no_of_international_conferences">
-                     <small class="text-danger">{{ no_of_international_conferencesError }}</small>
+                     <small class="text-danger" v-if="no_of_international_conferencesError">{{ no_of_international_conferencesError }}</small>
                     </div>
                   <div class="form-group mb-3">
                     <label for="no_of_local_conferences">No. of Local Conference</label>
                     <input type="number" id="no_of_local_conferences" class="form-control" v-model="no_of_local_conferences">
-                    <small class="text-danger">{{ no_of_local_conferencesError }}</small>
+                    <small class="text-danger" v-if="no_of_local_conferencesError">{{ no_of_local_conferencesError }}</small>
                   </div>
                   <div class="form-group mb-3">
                     <label for="no_of_workshops">No. of Workshops</label>
                     <input type="number" id="no_of_workshops" class="form-control" v-model="no_of_workshops">
-                    <small class="text-danger">{{ no_of_workshopsError }}</small>
+                    <small class="text-danger" v-if="no_of_workshopsError">{{ no_of_workshopsError }}</small>
                   </div>
                  <div class="form-group mb-3">
                     <label for="no_of_international_journals">No. of International Journals</label>
                     <input type="number" id="no_of_international_journals" class="form-control" v-model="no_of_international_journals">
-                    <small class="text-danger">{{ no_of_international_journalsError }}</small>
+                    <small class="text-danger" v-if="no_of_international_journalsError">{{ no_of_international_journalsError }}</small>
                   </div>
 
                   <div class="form-group mb-3">
                     <label for="books_and_contributions">Books/Chapter Contribution (Specify Numbers):</label>
                     <textarea type="number" id="books_and_contributions" class="form-control" v-model="books_and_contributions"></textarea>
-                    <small class="text-danger">{{ books_and_contributionsError }}</small>
+                    <small class="text-danger" v-if="books_and_contributionsError">{{ books_and_contributionsError }}</small>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group mb-3">
                     <label for="no_of_national_conferences">No. of National Conferences</label>
                     <input type="text" class="form-control" id="no_of_national_conferences" v-model="no_of_national_conferences" placeholder="Enter No.of National Conferences" autocomplete="conferences" >
-                    <small class="text-danger">{{ no_of_national_conferencesError }}</small>
+                    <small class="text-danger" v-if="no_of_national_conferencesError">{{ no_of_national_conferencesError }}</small>
                   </div>
                   <div class="form-group mb-3">
                     <label for="no_of_seminars">No. of Seminars</label>
                     <input type="text" class="form-control" id="no_of_seminars" v-model="no_of_seminars" placeholder="Enter No.of seminars" autocomplete="seminars">
-                    <small class="text-danger">{{ no_of_seminarsError }}</small>
+                    <small class="text-danger" v-if="no_of_seminarsError">{{ no_of_seminarsError }}</small>
                   </div>
                   <div class="form-group mb-3">
                     <label for="research_journals">Google Scholar/ResearchGate/Scopus Index Journals</label>
                     <textarea type="text" class="form-control" id="research_journals" v-model="research_journals" placeholder="Enter No.of National Conferences" autocomplete="journals">
                     </textarea>
-                    <small class="text-danger">{{ research_journalsError }}</small>
+                    <small class="text-danger" v-if="research_journalsError">{{ research_journalsError }}</small>
                   </div>
 
                  <div class="form-group mb-3">
                     <label for="no_of_national_journals">No. of National Journals</label>
                     <input class="form-control" id="no_of_national_journals" v-model="no_of_national_journals">
-                    <small class="text-danger">{{ no_of_national_journalsError }}</small>
+                    <small class="text-danger" v-if="no_of_national_journalsError">{{ no_of_national_journalsError }}</small>
                   </div>
 
                   <div class="form-group mb-3">
                     <label for="no_of_local_journal">No. of Local Journals</label>
                     <input class="form-control" id="no_of_local_journal" v-model="no_of_local_journal">
-                    <small class="text-danger">{{ no_of_local_journalError }}</small>
+                    <small class="text-danger" v-if="no_of_local_journalError">{{ no_of_local_journalError }}</small>
                   </div>
                 </div>
               </div>
@@ -286,9 +290,9 @@
             <label for="cv">Upload Resume/CV (pdf, doc.)</label>
             <div class="input-group">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="cv" accept=".pdf,.docx" @change="handleFileUpload($event, 'cv')">
+                    <input type="file" class="custom-file-input" id="cv" accept=".pdf,.docx" @change="handleFileUpload($event, 'cv')" required>
                     <label class="custom-file-label" for="cv">{{ fileInputs.find(input => input.name === 'cv').fileName || 'Choose file' }}</label>
-                    <small class="text-danger">{{ cvError }}</small>
+                    <small class="text-danger" v-if="cvError">{{ cvError }}</small>
                 </div>
             </div>
           </div>
@@ -297,9 +301,9 @@
             <label for="passport_photo">Passport Photograph (PNG, JPEG)</label>
             <div class="input-group">
               <div class="custom-file">
-                <input type="file" class="custom-file-input" id="passport_photo" accept=".jpeg,.jpg,.png" @change="handleFileUpload($event, 'passport_photo')">
+                <input type="file" class="custom-file-input" id="passport_photo" accept=".jpeg,.jpg,.png" @change="handleFileUpload($event, 'passport_photo')" required>
                 <label class="custom-file-label" for="passport_photo">{{ fileInputs.find(input => input.name === 'passport_photo').fileName || 'Choose file' }}</label>
-                <small class="text-danger">{{ passport_photoError }}</small>
+                <small class="text-danger" v-if="passport_photoError">{{ passport_photoError }}</small>
               </div>
             </div>
           </div>
@@ -311,9 +315,9 @@
             <label for="cover_letter">Cover Letter (pdf, Doc.)</label>
             <div class="input-group">
               <div class="custom-file">
-                 <input type="file" class="custom-file-input" id="cover_letter" accept=".pdf,.docx" @change="handleFileUpload($event, 'cover_letter')">
+                 <input type="file" class="custom-file-input" id="cover_letter" accept=".pdf,.docx" @change="handleFileUpload($event, 'cover_letter')" required>
                     <label class="custom-file-label" for="cover_letter">{{ fileInputs.find(input => input.name === 'cover_letter').fileName || 'Choose file' }}</label>
-                    <small class="text-danger">{{ letterError }}</small>
+                    <small class="text-danger" v-if="letterError">{{ letterError }}</small>
               </div>
             </div>
           </div>
@@ -323,17 +327,18 @@
                 <label for="letter_of_employment">Employment Letter from previous Ministry</label>
                 <div class="input-group">
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="letter_of_employment" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'letter_of_employment')">
+                    <input type="file" class="custom-file-input" id="letter_of_employment" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'letter_of_employment')" required>
                     <label class="custom-file-label" for="letter_of_employment">{{ fileInputs.find(input => input.name === 'letter_of_employment').fileName || 'Choose file' }}</label>
-                    <small class="text-danger">{{ letter_of_employmentError }}</small>
+                    <small class="text-danger" v-if="letter_of_employmentError">{{ letter_of_employmentError }}</small>
                   </div>
                 </div>
               </div>
                 </div>
               </div>             
               <div class="modal-footer justify-content-between">
-                  <button type="button" class="btn btn-outline-primary" @click="previousStep" >Back</button>
 
+                <button type="button" class="btn btn-outline-primary" @click="previousStep" v-if="currentStep > 1">Previous</button>
+    
                  <button type="submit" :disabled="loading" class="btn rounded btn-lg text-white" style="background-color:#00C000">
                   <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                   {{ loading ? 'Submitting...' : 'Submit Application' }}
@@ -439,6 +444,7 @@ export default {
       genderError: '',
       stateError: '',
       cityError: '',
+      
 
       // Step 2 error messages
       schoolError: '',
@@ -486,6 +492,220 @@ export default {
     };
   },
   methods: {
+
+     validateStep1AndProceed() {
+      // Reset all error messages
+      this.resetStep1Errors();
+
+      // Perform validation for each field
+      if (!this.employment_type) {
+        this.employment_typeError = 'Employment type is required';
+        return;
+      }
+      if (!this.firstname) {
+        this.firstNameError = 'First name is required';
+        return;
+      }
+      if (!this.email) {
+        this.emailError = 'Email address is required';
+        return;
+      }
+      if (!this.dob) {
+        this.dobError = 'Date of birth is required';
+        return;
+      }
+      if (!this.nationality) {
+        this.nationalityError = 'Nationality is required';
+        return;
+      }
+      if (!this.local_govt) {
+        this.lgaError = 'Local government is required';
+        return;
+      }
+      if (!this.address) {
+        this.addressError = 'Address is required';
+        return;
+      }
+      if (!this.lastname) {
+        this.lastnameError = 'Last name is required';
+        return;
+      }
+      if (!this.phone_number) {
+        this.phone_numberError = 'Phone number is required';
+        return;
+      }
+      if (!this.gender) {
+        this.genderError = 'Gender is required';
+        return;
+      }
+      if (!this.state_of_origin) {
+        this.stateError = 'State is required';
+        return;
+      }
+      if (!this.city) {
+        this.cityError = 'City is required';
+        return;
+      }
+
+      // If all validations pass, proceed to the next step
+      this.currentStep++;
+    },
+    // Method to reset Step 1 error messages
+    resetStep1Errors() {
+      this.employment_typeError = '';
+      this.firstNameError = '';
+      this.emailError = '';
+      this.dobError = '';
+      this.nationalityError = '';
+      this.lgaError = '';
+      this.addressError = '';
+      this.lastnameError = '';
+      this.phone_numberError = '';
+      this.genderError = '';
+      this.stateError = '';
+      this.cityError = '';
+      // Reset other error messages for Step 1
+    },
+
+
+
+    validateStep2AndProceed() {
+      // Reset all error messages
+      this.resetStep2Errors();
+
+      // Perform validation for each field
+      if (!this.name_of_school) {
+        this.schoolError = 'Name of school is required';
+        return;
+      }
+      if (!this.department) {
+        this.departmentError = 'Department is required';
+        return;
+      }
+      if (!this.specialization) {
+        this.specializationError = 'Specialization is required';
+        return;
+      }
+      if (!this.date_of_first_employment) {
+        this.dateOfFirstEmploymentError = 'Date of first employment is required';
+        return;
+      }
+      if (!this.degree) {
+        this.degreeError = 'Degree is required';
+        return;
+      }
+      if (!this.discipline) {
+        this.disciplineError = 'Discipline is required';
+        return;
+      }
+      if (!this.previous_employer) {
+        this.previous_employerError = 'Previous employer/institution is required';
+        return;
+      }
+      if (!this.professional_association) {
+        this.associationMembershipError = 'Professional association membership is required';
+        return;
+      }
+
+      // If all validations pass, proceed to the next step
+      this.currentStep++;
+    },
+    // Method to reset Step 2 error messages
+    resetStep2Errors() {
+      this.schoolError = '';
+      this.departmentError = '';
+      this.specializationError = '';
+      this.dateOfFirstEmploymentError = '';
+      this.degreeError = '';
+      this.disciplineError = '';
+      this.previous_employerError = '';
+      this.associationMembershipError = '';
+      // Reset other error messages for Step 2
+    },
+    // Add other methods as needed
+
+   validateAndProceed() {
+      // Reset all error messages
+      this.resetStep3Errors();
+
+      // Perform validation for each field
+      if (!this.no_of_international_conferences) {
+        this.no_of_international_conferencesError = 'Number of international conferences is required';
+        return;
+      }
+      if (!this.no_of_local_conferences) {
+        this.no_of_local_conferencesError = 'Number of local conferences is required';
+        return;
+      }
+      if (!this.no_of_workshops) {
+        this.no_of_workshopsError = 'Number of workshops is required';
+        return;
+      }
+      if (!this.no_of_international_journals) {
+        this.no_of_international_journalsError = 'Number of international journals is required';
+        return;
+      }
+      if (!this.books_and_contributions) {
+        this.books_and_contributionsError = 'Books/chapter contribution is required';
+        return;
+      }
+      if (!this.no_of_national_conferences) {
+        this.no_of_national_conferencesError = 'Number of national conferences is required';
+        return;
+      }
+      if (!this.no_of_seminars) {
+        this.no_of_seminarsError = 'Number of seminars is required';
+        return;
+      }
+      if (!this.research_journals) {
+        this.research_journalsError = 'Research journals information is required';
+        return;
+      }
+      if (!this.no_of_national_journals) {
+        this.no_of_national_journalsError = 'Number of national journals is required';
+        return;
+      }
+      if (!this.no_of_local_journal) {
+        this.no_of_local_journalError = 'Number of local journals is required';
+        return;
+      }
+      if (!this.cv) {
+        this.cvError = 'Resume/CV is required';
+        return;
+      }
+      if (!this.passport_photo) {
+        this.passport_photoError = 'Passport photograph is required';
+        return;
+      }
+      if (!this.cover_letter) {
+        this.letterError = 'Cover letter is required';
+        return;
+      }
+      if (!this.letter_of_employment) {
+        this.letter_of_employmentError = 'Employment letter is required';
+        return;
+      }
+    },
+    // Method to reset Step 3 error messages
+    resetStep3Errors() {
+      this.no_of_international_conferencesError = '';
+      this.no_of_local_conferencesError = '';
+      this.no_of_workshopsError = '';
+      this.no_of_international_journalsError = '';
+      this.books_and_contributionsError = '';
+      this.no_of_national_conferencesError = '';
+      this.no_of_seminarsError = '';
+      this.research_journalsError = '';
+      this.no_of_national_journalsError = '';
+      this.no_of_local_journalError = '';
+      this.cvError = '';
+      this.passport_photoError = '';
+      this.letterError = '';
+      this.letter_of_employmentError = '';
+      // Reset other error messages for Step 3
+    },
+    // Add other methods as needed
+
     handleFileUpload(event, name) {
       const file = event.target.files[0];
       // Update the fileName property of the corresponding file input object
@@ -494,154 +714,13 @@ export default {
       this[name] = file;
     },
 
-    // Step 1 validation logic
-    isStep1Valid() {
-      // Check if all required fields in step 1 are filled
-      if (
-        this.employment_type &&
-        this.email &&
-        this.dob &&
-        this.nationality &&
-        this.local_govt &&
-        this.address &&
-        this.firstname &&
-        this.lastname &&
-        this.phone_number &&
-        this.gender &&
-        this.state_of_origin &&
-        this.city
-      ) {
-        // Reset error messages
-        this.employment_typeError = '';
-        this.emailError = '';
-        this.dobError = '';
-        this.nationalityError = '';
-        this.lgaError = '';
-        this.addressError = '';
-        this.firstNameError = '';
-        this.lastNameError = '';
-        this.phone_numberError = '';
-        this.genderError = '';
-        this.stateError = '';
-        this.cityError = '';
-        return true; // All fields filled
-      } else {
-        // Set error messages for any unfilled required fields
-        this.employment_typeError = this.employment_type && typeof this.employment_type === 'string' ? (!this.employment_type.trim() ? 'Employment type is required' : '') : 'Employment type is required';
-        this.emailError = this.email && typeof this.email === 'string' ? (!this.email.trim() ? 'Email address is required' : '') : 'Email address is required';
-        this.dobError = this.dob && typeof this.dob === 'string' ? (!this.dob.trim() ? 'Date of birth is required' : '') : 'Date of birth is required';
-        this.nationalityError = this.nationality && typeof this.nationality === 'string' ? (!this.nationality.trim() ? 'Nationality is required' : '') : 'Nationality is required';
-        this.lgaError = this.local_govt && typeof this.local_govt === 'string' ? (!this.local_govt.trim() ? 'Local Government Area is required' : '') : 'Local Government Area is required';
-        this.addressError = this.address && typeof this.address === 'string' ? (!this.address.trim() ? 'Address is required' : '') : 'Address is required';
-        this.firstNameError = this.firstname && typeof this.firstname === 'string' ? (!this.firstname.trim() ? 'First name is required' : '') : 'First name is required';
-        this.lastNameError = this.lastname && typeof this.lastname === 'string' ? (!this.lastname.trim() ? 'Last name is required' : '') : 'Last name is required';
-        this.phone_numberError = this.phone_number && typeof this.phone_number === 'string' ? (!this.phone_number.trim() ? 'Phone number is required' : '') : 'Phone number is required';
-        this.genderError = this.gender && typeof this.gender === 'string' ? (!this.gender.trim() ? 'Gender is required' : '') : 'Gender is required';
-        this.stateError = this.state_of_origin && typeof this.state_of_origin === 'string' ? (!this.state_of_origin.trim() ? 'State is required' : '') : 'State is required';
-        this.cityError = this.city && typeof this.city === 'string' ? (!this.city.trim() ? 'City is required' : '') : 'City is required';
-
-        return false; // Some fields are unfilled
-      }
-    },
-
-   // Step 2 validation logic
-isStep2Valid() {
-  if (
-    !this.schoolError &&
-    !this.departmentError &&
-    !this.specializationError &&
-    !this.dateOfFirstEmploymentError &&
-    !this.degreeError &&
-    !this.disciplineError &&
-    !this.previous_employerError &&
-    !this.associationMembershipError
-  ) {
-    // All fields are filled, no errors
-    return true;
-  } else {
-    // Some fields are unfilled or have errors
-    // Implement validation logic for step 2 fields
-    this.schoolError = (!this.name_of_school || !this.name_of_school.trim()) ? 'School name is required' : '';
-    this.departmentError = (!this.department || !this.department.trim()) ? 'Department is required' : '';
-    this.specializationError = (!this.specialization || !this.specialization.trim()) ? 'Specialization is required' : '';
-    this.dateOfFirstEmploymentError = (!this.date_of_first_employment || !this.date_of_first_employment.trim()) ? 'Date of first employment is required' : '';
-    this.degreeError = (!this.degree || !this.degree.trim()) ? 'Degree is required' : '';
-    this.disciplineError = (!this.discipline || !this.discipline.trim()) ? 'Discipline is required' : '';
-    this.previous_employerError = (!this.previous_employer || !this.previous_employer.trim()) ? 'Previous employer is required' : '';
-    this.associationMembershipError = (!this.professional_association || !this.professional_association.trim()) ? 'Professional association membership is required' : '';
-
-    return false;
-  }
-},
-
-
-  // Step 3 validation logic
-isStep3Valid() {
-  if (
-    !this.cvError &&
-    !this.letter_of_employmentError &&
-    !this.letterError &&
-    !this.passport_photoError &&
-    !this.no_of_international_conferencesError &&
-    !this.no_of_international_journalsError &&
-    !this.no_of_local_conferencesError &&
-    !this.no_of_national_conferencesError &&
-    !this.no_of_national_journalsError &&
-    !this.no_of_seminarsError &&
-    !this.books_and_contributionsError &&
-    !this.no_of_workshopsError &&
-    !this.no_of_local_journalError &&
-    !this.research_journalsError
-  ) {
-    // All fields filled, no errors
-    return true;
-  } else {
-    // Some fields are unfilled or have errors
-    // Implement validation logic for step 3 fields
-    this.cvError = (!this.cv || !this.cv.trim()) ? 'Your resume/cv is required' : '';
-    this.letter_of_employmentError = (!this.letter_of_employment || !this.letter_of_employment.trim()) ? 'Your letter of employment is required' : '';
-    this.letterError = (!this.cover_letter || !this.cover_letter.trim()) ? 'Your Cover letter is required' : '';
-    this.passport_photoError = (!this.passport_photo || !this.passport_photo.trim()) ? 'Your Passport photograph is required' : '';
-    this.no_of_international_conferencesError = (!this.no_of_international_conferences || !this.no_of_international_conferences.trim()) ? 'Number of international conferences is required' : '';
-    this.no_of_local_conferencesError = (!this.no_of_local_conferences || !this.no_of_local_conferences.trim()) ? 'Number of local conferences is required' : '';
-    this.no_of_workshopsError = (!this.no_of_workshops || !this.no_of_workshops.trim()) ? 'Number of workshops is required' : '';
-    this.no_of_national_journalsError = (!this.no_of_national_journals || !this.no_of_national_journals.trim()) ? 'Number of national journals is required' : '';
-    this.no_of_local_journalError = (!this.no_of_local_journal || !this.no_of_local_journal.trim()) ? 'Number of local journals is required' : '';
-    this.research_journalsError = (!this.research_journals || !this.research_journals.trim()) ? 'Number of research journals is required' : '';
-    this.no_of_seminarsError = (!this.no_of_seminars || !this.no_of_seminars.trim()) ? 'Number of seminars is required' : '';
-    this.no_of_national_conferencesError = (!this.no_of_national_conferences || !this.no_of_national_conferences.trim()) ? 'Number of national conferences is required' : '';
-    this.books_and_contributionsError = (!this.books_and_contributions || !this.books_and_contributions.trim()) ? 'Books and contributions is required' : '';
-    this.no_of_international_journalsError = (!this.no_of_international_journals || !this.no_of_international_journals.trim()) ? 'Number of international journals is required' : '';
-
-    return false;
-  }
-},
-
-
-    validateStep1AndProceed() {
-      if (this.isStep1Valid()) {
-        this.currentStep++;
-      } else {
-        console.log('Step 1 is not valid');
-      }
-    },
-
-    validateStep2AndProceed() {
-      if (this.isStep2Valid()) {
-        this.currentStep++;
-      } else {
-        console.log('Step 2 is not valid');
-      }
-    },
-
-    previousStep() {
+  previousStep() {
       this.currentStep--;
     },
 
-    // API call to submit form data
-    submitApplication() {
+     submitApplication() {
       // Check if all steps are valid before submitting
-      if (this.isStep3Valid() && this.isStep1Valid() && this.isStep2Valid() ) {
+      if (!this.validateAndProceed()) {
         this.loading = true;
         const formData = new FormData();
         formData.append('job_role', this.job_role);
@@ -713,15 +792,16 @@ isStep3Valid() {
             Swal.fire({
               icon: 'error',
               title: 'Submission Failed',
-              text: 'There was an error submitting your application. Please try again later.',
+              text: 'Network Error. Please try again later.',
             });
           });
       } else {
         console.log('Step 3 is not valid');
       }
     }
+
   }
-}
+  }
 </script>
 
 

@@ -13,8 +13,8 @@
         <div v-for="(role, index) in paginatedRoles" :key="index" class="card mt-3">
           <div class="row g-0 p-3 card-body">
               <div class="col-7">
-                <h5 style="font-size:14px"><b>{{role.employment_type ? role.employment_type :'Unkown Faculty'}}</b><br>{{role.firstname ? role.firstname : 'Unknown Department' }}</h5>
-                <p>{{ role.degree ? role.degree : 'Unknown Category' }}</p>
+                <h5 style="font-size:14px"><b>{{role.role ? role.role.title :'Unkown Title'}}</b><br>{{role.role ? role.role.faculty.name : 'Unknown Faculty' }}</h5>
+                <p>{{ role.role ? role.role.dept.name : 'Unknown Department' }}</p>
               </div>
             <div class="col-5">
               <div class="modal-footer bg-white">
@@ -58,9 +58,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title"><b style="font-size:30px; font-weight:500px">
-            {{ selectedRole ? selectedRole.firstname  : '' }}
+            {{ selectedRole ? selectedRole.role.faculty.name  : '' }}
           </b><br>
-          <h6 class="badge badge-success">{{ selectedRole ? selectedRole.email : '' }}</h6>
+          <h6 class="badge badge-success">{{ selectedRole ? selectedRole.role.dept.name: 'Unknown Department' }}</h6>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
             <span aria-hidden="true">&times;</span>
@@ -68,14 +68,15 @@
         </div>
         <div class="modal-body">
           <div v-if="selectedRole">
-            <h5>About Role </h5>
-            <p>{{ selectedRole.discipline }}</p>
+            <p class="text-center" style="font-size:20px; font-weight:300px"><span class="text-uppercase font-weight-bold">{{ selectedRole.role.title }}</span><br>{{ selectedRole.employment_type }}</p>
+            <h5><strong>About Role </strong></h5>
+            <p>{{ selectedRole.role.about_role }}</p>
             <h5 class="mt-3"><strong>Responsibilities:</strong> </h5>
-            <p>{{ selectedRole.degree }}</p>
+            <p>{{ selectedRole.role.responsibilities }}</p>
             <h5 class="mt-3"><strong>Requirements:</strong></h5>
-            <p>{{ selectedRole.lastname }}</p>
-            <p><strong>Application Closing Date:</strong> {{ formatClosingDate(selectedRole.closing_date) }}</p>
-            <p><strong>Date Applied:</strong> {{ formatClosingDate(selectedRole.createdAt) }}</p>
+            <p>{{ selectedRole.role.requirments }}</p>
+            <p><strong>Closing Date:</strong> {{ formatClosingDate(selectedRole.role.closing_date) }}</p>
+            <p><strong>Date Applied:</strong> {{ formatClosingDate(selectedRole.role.createdAt) }}</p>
           </div>
           <div v-else>
             <p>No role selected.</p>
