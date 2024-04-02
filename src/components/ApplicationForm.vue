@@ -5,10 +5,10 @@
       <div class="col-md-1"></div>
       <div class="col-md-10">
         <h3 class="text-center mb-3" style="background-color:#EAFAF1">
-          <span style="font-size:40px; font-weight:bold" class="text-success">{{ faculty }}</span><br> 
-          {{ jobDepartment }}
+          <span style="font-size:40px; font-weight:bold" class="text-success">{{ $route.query.faculty }}</span><br> 
+          {{ $route.query.department }}
         </h3>
-        <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ jobTitle }}</h3>
+        <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ $route.query.jobTitle }}</h3>
 
         <div class="progress mb-3">
           <div v-if="currentStep==1" class="progress-bar" role="progressbar" :style="{ width: (0 * 33.33) + '%' }" aria-valuenow="currentStep * 33.33" aria-valuemin="0" aria-valuemax="100">{{ (currentStep * 33.33).toFixed(2) }}%</div>
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Single form for all steps -->
-    <form @submit.prevent="submitApplication">
+    <form @submit.prevent="validateAndProceed">
 
       <!-- Step 1 Content -->
       <div v-if="currentStep === 1">
@@ -87,6 +87,11 @@
 
                 <div class="col-md-6">
                   <div class="form-group mb-3">
+                    <label for="psn_number">PSN Number</label>
+                    <input type="text" class="form-control" id="psn_number" v-model="psn_number" placeholder="Enter your PSN number" autocomplete="PSN Number">
+                    <small class="text-danger" v-if="psn_numberError">{{ psn_numberError }}</small> 
+                  </div>
+                  <div class="form-group mb-3">
                     <label for="firstname">First Name</label>
                     <input type="text" class="form-control" id="firstname" v-model="firstname" placeholder="Enter your first name" autocomplete="first name">
                     <small class="text-danger" v-if="firstNameError">{{ firstNameError }}</small> 
@@ -132,7 +137,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                      <router-link :to="{ path: '/applicantDashboard' }" class="btn btn-outline-primary">Back</router-link>
-                    <button type="submit" @click="validateStep1AndProceed" class="btn btn-primary">Next</button>
+                    <button type="submit" @click="validateStep1AndProceed()" class="btn btn-primary">Next</button>
                 </div>
             </div>
           </div>
@@ -339,7 +344,7 @@
 
                 <button type="button" class="btn btn-outline-primary" @click="previousStep" v-if="currentStep > 1">Previous</button>
     
-                 <button type="submit" :disabled="loading" class="btn rounded btn-lg text-white" style="background-color:#00C000">
+                 <button type="submit" :disabled="loading" class="btn rounded btn-lg text-white" style="background-color:#00C000" @click="validateAndProceed">
                   <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                   {{ loading ? 'Submitting...' : 'Submit Application' }}
                 </button>
@@ -364,24 +369,27 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default {
-  computed: {
-    // Retrieve faculty, department, and job title from local storage
-    faculty() {
-      return localStorage.getItem('faculty');
-    },
-    jobDepartment() {
-      return localStorage.getItem('department');
-    },
-    jobTitle() {
-      return localStorage.getItem('jobTitle');
-    },
-  },
+  // computed: {
+  //   // Retrieve faculty, department, and job title from local storage
+  //   faculty() {
+  //     return localStorage.getItem('faculty');
+  //   },
+  //   jobDepartment() {
+  //     return localStorage.getItem('department');
+  //   },
+  //   jobTitle() {
+  //     return localStorage.getItem('jobTitle');
+  //   },
+  // },
   data() {
     return {
       currentStep: 1,
       loading: false,
+      hasApplied: false,
+      jobs: [],
       // Step 1 form fields
       employment_type: '',
+      psn_number: '',
       middlename: '',
       email: '',
       dob: '',
@@ -434,6 +442,7 @@ export default {
       // Step 1 error messages
       employment_typeError: '',
       emailError: '',
+      psn_numberError: '',
       dobError: '',
       nationalityError: '',
       lgaError: '',
@@ -472,14 +481,30 @@ export default {
       books_and_contributionsError: '',
       no_of_international_journalsError: '',
 
-      nationalities: [
-        'Afghan', 'Albanian', 'Algerian', 'American', 'Andorran', 'Angolan', 'Antiguans', 'Argentinean', 'Armenian', 'Australian',
-        'Austrian', 'Azerbaijani', 'Bahamian', 'Bahraini', 'Bangladeshi', 'Barbadian', 'Barbudans', 'Batswana', 'Belarusian',
-        'Belgian', 'Belizean', 'Beninese', 'Bhutanese', 'Bolivian', 'Bosnian', 'Brazilian', 'British', 'Bruneian', 'Bulgarian',
-        'Burkinabe', 'Burmese', 'Burundian', 'Cambodian', 'Cameroonian', 'Canadian', 'Cape Verdean', 'Central African', 'Chadian',
-        'Chilean', 'Chinese', 'Colombian', 'Comoran', 'Congolese', 'Costa Rican', 'Croatian', 'Cuban', 'Cypriot', 'Czech',
-        // Add more nationalities here
-      ],
+    nationalities: [
+      'Afghan', 'Albanian', 'Algerian', 'American', 'Andorran', 'Angolan', 'Antiguans', 'Argentinean', 'Armenian', 'Australian',
+      'Austrian', 'Azerbaijani', 'Bahamian', 'Bahraini', 'Bangladeshi', 'Barbadian', 'Barbudans', 'Batswana', 'Belarusian',
+      'Belgian', 'Belizean', 'Beninese', 'Bhutanese', 'Bolivian', 'Bosnian', 'Brazilian', 'British', 'Bruneian', 'Bulgarian',
+      'Burkinabe', 'Burmese', 'Burundian', 'Cambodian', 'Cameroonian', 'Canadian', 'Cape Verdean', 'Central African', 'Chadian',
+      'Chilean', 'Chinese', 'Colombian', 'Comoran', 'Congolese', 'Costa Rican', 'Croatian', 'Cuban', 'Cypriot', 'Czech',
+      // Additional nationalities
+      'Djibouti', 'Dominican', 'Dutch', 'East Timorese', 'Ecuadorean', 'Egyptian', 'Emirian', 'Equatorial Guinean', 'Eritrean', 'Estonian',
+      'Ethiopian', 'Fijian', 'Filipino', 'Finnish', 'French', 'Gabonese', 'Gambian', 'Georgian', 'German', 'Ghanaian',
+      'Greek', 'Grenadian', 'Guatemalan', 'Guinea-Bissauan', 'Guinean', 'Guyanese', 'Haitian', 'Herzegovinian', 'Honduran', 'Hungarian',
+      'I-Kiribati', 'Icelander', 'Indian', 'Indonesian', 'Iranian', 'Iraqi', 'Irish', 'Israeli', 'Italian', 'Ivorian',
+      'Jamaican', 'Japanese', 'Jordanian', 'Kazakhstani', 'Kenyan', 'Kittian and Nevisian', 'Kuwaiti', 'Kyrgyz', 'Laotian', 'Latvian',
+      'Lebanese', 'Liberian', 'Libyan', 'Liechtensteiner', 'Lithuanian', 'Luxembourger', 'Macedonian', 'Malagasy', 'Malawian', 'Malaysian',
+      'Maldivan', 'Malian', 'Maltese', 'Marshallese', 'Mauritanian', 'Mauritian', 'Mexican', 'Micronesian', 'Moldovan', 'Monacan',
+      'Mongolian', 'Montenegrin', 'Moroccan', 'Mosotho', 'Motswana', 'Mozambican', 'Namibian', 'Nauruan', 'Nepalese', 'New Zealander',
+      'Nicaraguan', 'Nigerian', 'Nigerien', 'North Korean', 'Northern Irish', 'Norwegian', 'Omani', 'Pakistani', 'Palauan', 'Panamanian',
+      'Papua New Guinean', 'Paraguayan', 'Peruvian', 'Polish', 'Portuguese', 'Qatari', 'Romanian', 'Russian', 'Rwandan', 'Saint Lucian',
+      'Salvadoran', 'Samoan', 'San Marinese', 'Sao Tomean', 'Saudi', 'Scottish', 'Senegalese', 'Serbian', 'Seychellois', 'Sierra Leonean',
+      'Singaporean', 'Slovakian', 'Slovenian', 'Solomon Islander', 'Somali', 'South African', 'South Korean', 'Spanish', 'Sri Lankan',
+      'Sudanese', 'Surinamer', 'Swazi', 'Swedish', 'Swiss', 'Syrian', 'Taiwanese', 'Tajik', 'Tanzanian', 'Thai', 'Togolese',
+      'Tongan', 'Trinidadian or Tobagonian', 'Tunisian', 'Turkish', 'Tuvaluan', 'Ugandan', 'Ukrainian', 'Uruguayan', 'Uzbekistani', 'Venezuelan',
+      'Vietnamese', 'Welsh', 'Yemenite', 'Zambian', 'Zimbabwean'
+    ],
+
       nigeriaStates: [
         'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 'Cross River', 'Delta',
         'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT - Abuja', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
@@ -500,6 +525,10 @@ export default {
       // Perform validation for each field
       if (!this.employment_type) {
         this.employment_typeError = 'Employment type is required';
+        return;
+      }
+      if (!this.psn_number) {
+        this.psn_numberError = 'PSN number type is required';
         return;
       }
       if (!this.firstname) {
@@ -553,6 +582,7 @@ export default {
     // Method to reset Step 1 error messages
     resetStep1Errors() {
       this.employment_typeError = '';
+      this.psn_numberError = '',
       this.firstNameError = '';
       this.emailError = '';
       this.dobError = '';
@@ -685,6 +715,8 @@ export default {
         this.letter_of_employmentError = 'Employment letter is required';
         return;
       }
+
+      this.submitApplication();
     },
     // Method to reset Step 3 error messages
     resetStep3Errors() {
@@ -718,14 +750,17 @@ export default {
       this.currentStep--;
     },
 
+    
+
      submitApplication() {
       // Check if all steps are valid before submitting
-      if (!this.validateAndProceed()) {
+      if (this.currentStep === 3) {
         this.loading = true;
         const formData = new FormData();
         formData.append('job_role', this.job_role);
         formData.append('user', this.user);
         formData.append('type', this.type);
+        formData.append('psn_number', this.psn_number);
         formData.append('employment_type', this.employment_type);
         formData.append('firstname', this.firstname);
         formData.append('middlename', this.middlename);
@@ -789,10 +824,11 @@ export default {
           .catch(error => {
             console.error(error);
             this.loading = false;
+             const errorMessage = error.response ? error.response.data.message : 'Unknown error occurred';
             Swal.fire({
               icon: 'error',
               title: 'Submission Failed',
-              text: 'Network Error. Please try again later.',
+              text: errorMessage,
             });
           });
       } else {
