@@ -404,7 +404,7 @@ export default {
       city: '',
       job_role: this.$route.query.jobId,
       user: localStorage.getItem('user_id'),
-      type: this.$route.query.job_type,
+      type: this.$route.query.jobType || 'internal',
 
       // Step 2 form fields
       name_of_school: '',
@@ -759,7 +759,7 @@ export default {
         const formData = new FormData();
         formData.append('job_role', this.job_role);
         formData.append('user', this.user);
-        formData.append('type', this.type);
+        formData.append('type', 'internal');
         formData.append('psn_number', this.psn_number);
         formData.append('employment_type', this.employment_type);
         formData.append('firstname', this.firstname);
