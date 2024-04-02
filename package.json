@@ -16,6 +16,7 @@
     "jquery": "^3.7.1",
     "lodash": "^4.17.21",
     "sweetalert2": "^11.10.6",
+    "vee-validate": "^4.5.8",
     "vue": "^3.2.13",
     "vue-countries-cities": "^1.0.0",
     "vue-router": "^4.0.13",
