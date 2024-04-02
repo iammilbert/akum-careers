@@ -792,7 +792,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Submission Failed',
-              text: 'Error Occur. Please try again later.',
+              text: 'Network Error. Please try again later.',
             });
           });
       } else {
