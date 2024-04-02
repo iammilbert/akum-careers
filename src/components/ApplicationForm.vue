@@ -23,7 +23,6 @@
 
     <!-- Single form for all steps -->
     <form @submit.prevent="validateAndProceed">
-
       <!-- Step 1 Content -->
       <div v-if="currentStep === 1">
         <div class="row">
@@ -208,7 +207,6 @@
 
            <div class="modal-footer justify-content-between">
                   <button type="button" class="btn btn-outline-primary" @click="previousStep" >Previous</button>
-
                   <button type="button" class="btn btn-primary" @click="validateStep2AndProceed">Next</button>
               </div>
               </div>
@@ -381,6 +379,7 @@ export default {
   //     return localStorage.getItem('jobTitle');
   //   },
   // },
+
   data() {
     return {
       currentStep: 1,
@@ -404,7 +403,7 @@ export default {
       city: '',
       job_role: this.$route.query.jobId,
       user: localStorage.getItem('user_id'),
-      type: this.$route.query.job_type,
+      type: this.$route.query.jobType || 'internal',
 
       // Step 2 form fields
       name_of_school: '',
@@ -505,6 +504,7 @@ export default {
       'Vietnamese', 'Welsh', 'Yemenite', 'Zambian', 'Zimbabwean'
     ],
 
+
       nigeriaStates: [
         'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 'Cross River', 'Delta',
         'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT - Abuja', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
@@ -525,6 +525,10 @@ export default {
       // Perform validation for each field
       if (!this.employment_type) {
         this.employment_typeError = 'Employment type is required';
+        return;
+      }
+      if (!this.psn_number) {
+        this.psn_numberError = 'PSN number type is required';
         return;
       }
       if (!this.psn_number) {
@@ -582,6 +586,7 @@ export default {
     // Method to reset Step 1 error messages
     resetStep1Errors() {
       this.employment_typeError = '';
+      this.psn_numberError = '',
       this.psn_numberError = '',
       this.firstNameError = '';
       this.emailError = '';
@@ -717,6 +722,8 @@ export default {
       }
 
       this.submitApplication();
+
+      this.submitApplication();
     },
     // Method to reset Step 3 error messages
     resetStep3Errors() {
@@ -750,8 +757,6 @@ export default {
       this.currentStep--;
     },
 
-    
-
      submitApplication() {
       // Check if all steps are valid before submitting
       if (this.currentStep === 3) {
@@ -759,7 +764,7 @@ export default {
         const formData = new FormData();
         formData.append('job_role', this.job_role);
         formData.append('user', this.user);
-        formData.append('type', this.type);
+        formData.append('type', 'internal');
         formData.append('psn_number', this.psn_number);
         formData.append('employment_type', this.employment_type);
         formData.append('firstname', this.firstname);
@@ -824,7 +829,7 @@ export default {
           .catch(error => {
             console.error(error);
             this.loading = false;
-             const errorMessage = error.response ? error.response.data.message : 'Unknown error occurred';
+            const errorMessage = error.response ? error.response.data.message : 'Unknown error occurred';
             Swal.fire({
               icon: 'error',
               title: 'Submission Failed',
@@ -835,8 +840,7 @@ export default {
         console.log('Step 3 is not valid');
       }
     }
-
-  }
+     }
   }
 </script>
 
@@ -857,5 +861,3 @@ export default {
   border-radius: 13px !important; /* Adjust the value as needed */
 }
 </style>
-
-
