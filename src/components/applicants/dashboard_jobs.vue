@@ -208,24 +208,29 @@ computed: {
       this.showModal = false;
       this.selectedRole = null;
     },
-    applyRole() {
-      const jobTitle = this.selectedRole ? this.selectedRole.title : '';
-      const jobId = this.selectedRole ? this.selectedRole._id : '';
-      const faculty = this.selectedRole.faculty.name;
-      const department = this.selectedRole.dept.name;
-      const job_type = this.selectedRole.job_type;
-      console.log(`Applying for job: ${jobTitle}, ID: ${jobId}`);
-      this.$router.push({
-        path: '/application-form',
-        query: {
-          jobTitle: jobTitle,
-          jobId: jobId,
-          faculty: faculty,
-          department: department,
-          job_type: job_type,
-        }
-      });
-    },
+      applyRole() {
+        const { title, _id, faculty, dept, job_type } = this.selectedRole || {};
+        
+        const jobTitle = title || '';
+        const jobId = _id || '';
+        const facultyName = faculty ? faculty.name : '';
+        const departmentName = dept ? dept.name : '';
+        const jobType = job_type || '';
+
+        console.log(`Applying for job: ${jobTitle}, ID: ${jobId}`);
+        
+        this.$router.push({
+          path: '/application-form',
+          query: {
+            jobTitle,
+            jobId,
+            faculty: facultyName,
+            department: departmentName,
+            jobType,
+          }
+        });
+      },
+    
     changePage(pageNumber) {
       this.currentPage = pageNumber;
     },

@@ -5,10 +5,10 @@
       <div class="col-md-1"></div>
       <div class="col-md-10">
         <h3 class="text-center mb-3" style="background-color:#EAFAF1">
-          <span style="font-size:40px; font-weight:bold" class="text-success">{{ faculty }}</span><br> 
-          {{ jobDepartment }}
+          <span style="font-size:40px; font-weight:bold" class="text-success">{{ $route.query.faculty }}</span><br> 
+          {{ $route.query.department }}
         </h3>
-        <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ jobTitle }}</h3>
+        <h3 class="text-center mb-3" style="font-size:30px; font-weight:500px;">{{ $route.query.jobTitle }}</h3>
 
         <div class="progress mb-3">
           <div v-if="currentStep==1" class="progress-bar" role="progressbar" :style="{ width: (0 * 33.33) + '%' }" aria-valuenow="currentStep * 33.33" aria-valuemin="0" aria-valuemax="100">{{ (currentStep * 33.33).toFixed(2) }}%</div>
@@ -369,18 +369,18 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default {
-  computed: {
-    // Retrieve faculty, department, and job title from local storage
-    faculty() {
-      return localStorage.getItem('faculty');
-    },
-    jobDepartment() {
-      return localStorage.getItem('department');
-    },
-    jobTitle() {
-      return localStorage.getItem('jobTitle');
-    },
-  },
+  // computed: {
+  //   // Retrieve faculty, department, and job title from local storage
+  //   faculty() {
+  //     return localStorage.getItem('faculty');
+  //   },
+  //   jobDepartment() {
+  //     return localStorage.getItem('department');
+  //   },
+  //   jobTitle() {
+  //     return localStorage.getItem('jobTitle');
+  //   },
+  // },
   data() {
     return {
       currentStep: 1,
