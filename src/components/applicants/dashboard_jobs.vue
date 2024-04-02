@@ -59,6 +59,7 @@
               <div class="col-md-7 col-sm-12">
                 <h5 style="font-size:14px"><b>{{role.faculty ? role.faculty.name :'Unkown Faculty'}}</b><br>{{role.dept ? role.dept.name : 'Unknown Department' }}</h5>
                 <p>{{ role.category ? role.category.category : 'Unknown Category' }}</p>
+                <h6 style="font-size:13px;" ><i class="fa fa-exclamation text-danger"></i> Current Staff of Niger State College of Education Minna. Only</h6>
               </div>
               <div class="col-md-5 col-sm-12">
                 <div class="bg-white justify-content-between">
@@ -101,6 +102,11 @@
           {{ selectedRole ? selectedRole.title : '' }}
         </b><br>
         <h6 class="badge badge-success">{{ selectedRole ? selectedRole.dept.name : '' }}</h6>
+          <div class="card-title">
+            <h6 class="text-danger">
+            <b>Note: </b>This Job Opening is Only available for Current Staff of Niger State College of Education Minna
+            </h6>
+          </div>
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
           <span aria-hidden="true">&times;</span>
