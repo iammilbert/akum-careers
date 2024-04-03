@@ -730,6 +730,8 @@ export default {
       }
 
       this.submitApplication();
+
+      this.submitApplication();
     },
     // Method to reset Step 3 error messages
     resetStep3Errors() {
