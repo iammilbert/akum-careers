@@ -34,7 +34,7 @@
                 <!-- Step 1 form fields -->
               <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group mb-3">
+                  <div class="form-group mb-3">
                     <input type="hidden" id="job_role" class="form-control" v-model="job_role" readonly>
                     <input type="hidden" class="form-control form-control-lg" id="user" v-model="user" readonly>
                      <input type="hidden" class="form-control form-control-lg" id="type" v-model="type" readonly>
@@ -48,33 +48,30 @@
                     </select>
                     <small class="text-danger" v-if="employment_typeError">{{ employment_typeError }}</small> 
                   </div>
+
+                                    <div class="form-group mb-3">
+                    <label for="firstname">First Name</label>
+                    <input type="text" class="form-control" id="firstname" v-model="firstname" placeholder="Enter your first name" autocomplete="first name">
+                    <small class="text-danger" v-if="firstNameError">{{ firstNameError }}</small> 
+                  </div>
                   <div class="form-group mb-3">
                     <label for="middlename">Middle Name</label>
                     <input type="text" class="form-control" id="middlename" v-model="middlename" placeholder="Enter your middle name" autocomplete="middle name">
                   </div>
                   <div class="form-group mb-3">
-                    <label for="email">Email Address</label>
-                    <input type="email" class="form-control" id="email" v-model="email" placeholder="e.g. admin@example.com" autocomplete="email">
-                     <small class="text-danger" v-if="emailError">{{ emailError }}</small> 
+                    <label for="lastname">Last Name</label>
+                    <input type="text" class="form-control" id="lastname" v-model="lastname" placeholder="Enter your last name" autocomplete="last name">
+                    <small class="text-danger" v-if="lastNameError">{{ lastNameError }}</small> 
                   </div>
                   <div class="form-group mb-3">
                     <label for="dob">Date of Birth</label>
                     <input type="date" class="form-control" id="dob" v-model="dob" autocomplete="date">
                      <small class="text-danger" v-if="dobError">{{ dobError }}</small> 
                   </div>
-
                   <div class="form-group mb-3">
-                    <label for="nationality">Nationality</label>
-                    <select class="form-control" id="nationality" v-model="nationality" @change="updateStates" >
-                      <option value="" disabled selected>Select Nationality</option>
-                      <option v-for="nationality in nationalities" :key="nationality" :value="nationality">{{ nationality }}</option>
-                    </select>
-                     <small class="text-danger" v-if="nationalityError">{{ nationalityError }}</small> 
-                  </div>
-                  <div class="form-group mb-3">
-                    <label for="local_govt">Local Government</label>
-                    <input type="text" class="form-control" id="local_govt" v-model="local_govt" placeholder="Enter Local Govt">
-                    <small class="text-danger" v-if="lgaError">{{ lgaError }}</small> 
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" v-model="email" placeholder="e.g. admin@example.com" autocomplete="email">
+                     <small class="text-danger" v-if="emailError">{{ emailError }}</small> 
                   </div>
                   
                   <div class="form-group mb-3">
@@ -85,22 +82,8 @@
                 </div>
 
                 <div class="col-md-6">
-                  <div class="form-group mb-3">
-                    <label for="psn_number">PSN Number</label>
-                    <input type="text" class="form-control" id="psn_number" v-model="psn_number" placeholder="Enter your PSN number" autocomplete="PSN Number">
-                    <small class="text-danger" v-if="psn_numberError">{{ psn_numberError }}</small> 
-                  </div>
-                  <div class="form-group mb-3">
-                    <label for="firstname">First Name</label>
-                    <input type="text" class="form-control" id="firstname" v-model="firstname" placeholder="Enter your first name" autocomplete="first name">
-                    <small class="text-danger" v-if="firstNameError">{{ firstNameError }}</small> 
-                  </div>
-                  <div class="form-group mb-3">
-                    <label for="lastname">Last Name</label>
-                    <input type="text" class="form-control" id="lastname" v-model="lastname" placeholder="Enter your last name" autocomplete="last name">
-                    <small class="text-danger" v-if="lastNameError">{{ lastNameError }}</small> 
-                  </div>
-                  <div class="form-group mb-3">
+
+                               <div class="form-group mb-3">
                     <label for="phone_number">Phone number</label>
                     <input type="tel" class="form-control" id="phone_number" v-model="phone_number" placeholder="08162198753" autocomplete="phone number">
                     <small class="text-danger" v-if="phone_numberError">{{ phone_numberError }}</small> 
@@ -115,6 +98,19 @@
                     <small class="text-danger" v-if="genderError">{{ genderError }}</small>
                     
                   </div>
+                  <div class="form-group mb-3">
+                    <label for="psn_number">PSN Number</label>
+                    <input type="text" class="form-control" id="psn_number" v-model="psn_number" placeholder="Enter your PSN number" autocomplete="PSN Number">
+                    <small class="text-danger" v-if="psn_numberError">{{ psn_numberError }}</small> 
+                  </div>  
+                  <div class="form-group mb-3">
+                    <label for="nationality">Nationality</label>
+                    <select class="form-control" id="nationality" v-model="nationality" @change="updateStates" >
+                      <option value="" disabled selected>Select Nationality</option>
+                      <option v-for="nationality in nationalities" :key="nationality" :value="nationality">{{ nationality }}</option>
+                    </select>
+                     <small class="text-danger" v-if="nationalityError">{{ nationalityError }}</small> 
+                  </div>
 
                   <div class="form-group mb-3">
                     <label for="state_of_origin">State</label>
@@ -124,6 +120,13 @@
                     </select>
                     <small class="text-danger" v-if="stateError">{{ stateError }}</small>
                   </div>
+
+                  <div class="form-group mb-3">
+                    <label for="local_govt">Local Government</label>
+                    <input type="text" class="form-control" id="local_govt" v-model="local_govt" placeholder="Enter Local Govt">
+                    <small class="text-danger" v-if="lgaError">{{ lgaError }}</small> 
+                  </div>
+
 
                   <div class="form-group mb-3">
                     <label for="city">City</label>
@@ -166,20 +169,7 @@
                 <input type="text" class="form-control" id="department" v-model="department" placeholder="Enter department">
                 <small class="text-danger" v-if="departmentError">{{ departmentError }}</small>
               </div>
-
               <div class="form-group mb-3">
-                <label for="specialization">Specialization</label>
-                <input type="text" class="form-control" id="specialization" v-model="specialization" placeholder="E.g. Enter specialization">
-                 <small class="text-danger" v-if="specializationError">{{ specializationError }}</small>
-              </div>
-              <div class="form-group mb-3">
-                <label for="date_of_first_employment">Date of First Employment</label>
-                <input type="date" class="form-control" id="date_of_first_employment" v-model="date_of_first_employment">
-                 <small class="text-danger" v-if="dateOfFirstEmploymentError">{{ dateOfFirstEmploymentError }}</small>
-              </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
                   <label for="degree">Degree</label>
                   <input type="text" class="form-control" id="degree" v-model="degree" placeholder="E.g. Bachelor Degree">
                    <small class="text-danger" v-if="degreeError">{{ degreeError }}</small>
@@ -189,6 +179,19 @@
                   <input type="text" class="form-control" id="discipline" v-model="discipline" placeholder="E.g. Computer Science">
                    <small class="text-danger" v-if="disciplineError">{{ disciplineError }}</small>
                 </div>
+
+              <div class="form-group mb-3">
+                <label for="specialization">Specialization</label>
+                <input type="text" class="form-control" id="specialization" v-model="specialization" placeholder="E.g. Enter specialization">
+                 <small class="text-danger" v-if="specializationError">{{ specializationError }}</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="date_of_first_employment">Date of First Employment</label>
+                <input type="date" class="form-control" id="date_of_first_employment" v-model="date_of_first_employment">
+                 <small class="text-danger" v-if="dateOfFirstEmploymentError">{{ dateOfFirstEmploymentError }}</small>
+              </div>
 
               <!-- <div class="form-group mb-3" v-if="$route.query.jobType === 'special'"> -->
               <div class="form-group mb-3">                
@@ -286,6 +289,7 @@
               </div>
 
               <h4>Attach Relevant Documents</h4>
+              <h6 class="text-danger"><i class="fa fa-exclamation text-danger"></i> File Size can be less than 50KB but not more than 50KB</h6>
 
         <div class="row">
           <div class="col-md-6">
@@ -293,9 +297,10 @@
             <label for="cv">Upload Resume/CV (pdf, doc.)</label>
             <div class="input-group">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="cv" accept=".pdf,.docx" @change="handleFileUpload($event, 'cv')" required>
+                    <input type="file" class="custom-file-input" id="cv" accept=".pdf,.docx" @change="handleFileUpload($event, 'cv')"  v-bind:class="{ 'file too large': cvError }"> required>
                     <label class="custom-file-label" for="cv">{{ fileInputs.find(input => input.name === 'cv').fileName || 'Choose file' }}</label>
                     <small class="text-danger" v-if="cvError">{{ cvError }}</small>
+                    <small class="text-danger" v-if="fileSizeErrorMessage">{{ fileSizeErrorMessage }}</small>
                 </div>
             </div>
           </div>
@@ -307,6 +312,7 @@
                 <input type="file" class="custom-file-input" id="passport_photo" accept=".jpeg,.jpg,.png" @change="handleFileUpload($event, 'passport_photo')" required>
                 <label class="custom-file-label" for="passport_photo">{{ fileInputs.find(input => input.name === 'passport_photo').fileName || 'Choose file' }}</label>
                 <small class="text-danger" v-if="passport_photoError">{{ passport_photoError }}</small>
+                <small class="text-danger" v-if="fileSizeErrorMessage">{{ fileSizeErrorMessage }}</small>
               </div>
             </div>
           </div>
@@ -321,6 +327,7 @@
                  <input type="file" class="custom-file-input" id="cover_letter" accept=".pdf,.docx" @change="handleFileUpload($event, 'cover_letter')" required>
                     <label class="custom-file-label" for="cover_letter">{{ fileInputs.find(input => input.name === 'cover_letter').fileName || 'Choose file' }}</label>
                     <small class="text-danger" v-if="letterError">{{ letterError }}</small>
+                    <small class="text-danger" v-if="fileSizeErrorMessage">{{ fileSizeErrorMessage }}</small>
               </div>
             </div>
           </div>
@@ -333,6 +340,7 @@
                     <input type="file" class="custom-file-input" id="letter_of_employment" accept=".pdf,.docx,.jpeg,.jpg,.png" @change="handleFileUpload($event, 'letter_of_employment')" required>
                     <label class="custom-file-label" for="letter_of_employment">{{ fileInputs.find(input => input.name === 'letter_of_employment').fileName || 'Choose file' }}</label>
                     <small class="text-danger" v-if="letter_of_employmentError">{{ letter_of_employmentError }}</small>
+                    <small class="text-danger" v-if="fileSizeErrorMessage">{{ fileSizeErrorMessage }}</small>
                   </div>
                 </div>
               </div>
@@ -722,8 +730,6 @@ export default {
       }
 
       this.submitApplication();
-
-      this.submitApplication();
     },
     // Method to reset Step 3 error messages
     resetStep3Errors() {
@@ -745,13 +751,26 @@ export default {
     },
     // Add other methods as needed
 
-    handleFileUpload(event, name) {
-      const file = event.target.files[0];
-      // Update the fileName property of the corresponding file input object
-      this.fileInputs.find(input => input.name === name).fileName = file ? file.name : '';
-      // Update the data property with the selected file
-      this[name] = file;
-    },
+handleFileUpload(event, name) {
+  const file = event.target.files[0];
+  const maxSize = 50 * 1024; // 50KB
+
+  if (file.size > maxSize) {
+    Swal.fire({
+      icon: 'error',
+      title: 'File Size Error',
+      text: 'File size must be less than 50KB',
+    });
+    // Reset the selected file
+    event.target.value = '';
+    return; // Exit the method without further processing
+  }
+
+  // Update the fileName property of the corresponding file input object
+  this.fileInputs.find(input => input.name === name).fileName = file ? file.name : '';
+  // Update the data property with the selected file
+  this[name] = file;
+},
 
   previousStep() {
       this.currentStep--;
@@ -829,7 +848,8 @@ export default {
           .catch(error => {
             console.error(error);
             this.loading = false;
-            const errorMessage = error.response ? error.response.data.message : 'Unknown error occurred';
+            const errorMessage = error.response ? error.response.data.message : '';
+             console.log(errorMessage);
             Swal.fire({
               icon: 'error',
               title: 'Submission Failed',
